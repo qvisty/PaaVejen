@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     "apps.bookings",
     "apps.messaging",
     "apps.ratings",
+    "apps.notifications",
 ]
 
 MIDDLEWARE = [
@@ -98,6 +99,17 @@ MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+# E mail, jf. PRD afsnit 22. Konsol i udvikling, SMTP via miljøvariabler i drift.
+EMAIL_BACKEND = os.environ.get(
+    "DJANGO_EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend",
+)
+EMAIL_HOST = os.environ.get("DJANGO_EMAIL_HOST", "")
+EMAIL_PORT = int(os.environ.get("DJANGO_EMAIL_PORT", "587"))
+EMAIL_HOST_USER = os.environ.get("DJANGO_EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("DJANGO_EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.environ.get("DJANGO_EMAIL_USE_TLS", "1") == "1"
+DEFAULT_FROM_EMAIL = os.environ.get("DJANGO_DEFAULT_FROM_EMAIL", "PåVejen <noreply@paavejen.dk>")
+
 LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "dashboard"
 LOGOUT_REDIRECT_URL = "home"
@@ -123,4 +135,6 @@ PAAVEJEN = {
     "MAX_CORRIDOR_KM": 25,
     # Standard maksimal omvej hvis chaufføren ikke har angivet en.
     "DEFAULT_MAX_DETOUR_MINUTES": 30,
+    # Basis URL til links i notifikationsmails.
+    "BASE_URL": os.environ.get("PAAVEJEN_BASE_URL", "http://127.0.0.1:8000"),
 }

@@ -21,6 +21,7 @@ from django.utils import timezone
 
 from apps.core import pricing
 from apps.core.constants import SIZE_ORDER, size_fits
+from apps.notifications import services as notifications
 from apps.core.geo import haversine_km, point_to_segment
 from apps.core.routing import get_router
 from apps.transport.models import TransportRequest
@@ -219,7 +220,7 @@ class MatchingService:
         return int(round(total * 100))
 
     def _store(self, candidate: MatchCandidate) -> Match:
-        match, _created = Match.objects.update_or_create(
+        match, created = Match.objects.update_or_create(
             trip=candidate.trip,
             transport_request=candidate.transport_request,
             defaults={
@@ -233,6 +234,8 @@ class MatchingService:
         if match.status in (Match.Status.DECLINED, Match.Status.EXPIRED):
             match.status = Match.Status.SUGGESTED
             match.save(update_fields=["status"])
+        if created:
+            notifications.notify_new_match(match)
         return match
 
     def _update_request_status(self, transport_request: TransportRequest) -> None:
