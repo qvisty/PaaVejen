@@ -18,9 +18,10 @@ Dette er den første fungerende prototype, jf. PRD afsnit 40 og 57. Den beviser 
 - Afhentningskode og afleveringskode, der bekræfter statusskift i transportflowet.
 - Privat chat pr. booking med systembeskeder ved statusændringer.
 - Gensidig rating efter aflevering. Bookingen afsluttes, når begge har vurderet.
+- E mail notifikationer ved nyt match, forespørgsel, accept, afvisning, afhentning, aflevering og nye chatbeskeder, jf. PRD afsnit 22.
 - Django Admin som internt administrationsinterface.
 
-Bevidst udeladt i prototypen, jf. PRD afsnit 40: betaling, MitID, moderation, forsikring, billeder og notifikationer.
+Bevidst udeladt i prototypen, jf. PRD afsnit 40: betaling, MitID, moderation, forsikring, billeder og push og SMS notifikationer.
 
 ## Teknisk
 
@@ -28,7 +29,8 @@ Bevidst udeladt i prototypen, jf. PRD afsnit 40: betaling, MitID, moderation, fo
 - Django apps under `apps/`: accounts, core, trips, transport, matching, bookings, messaging og ratings, jf. PRD afsnit 31 og 58.
 - Matchingmotoren ligger i `apps/matching/services.py` som en separat serviceklasse, jf. PRD afsnit 34.
 - Routing er abstraheret i `apps/core/routing.py`. Prototypen bruger luftlinje gange en vejfaktor. En rigtig routing API kan sættes ind uden ændringer i matchingmotoren, jf. PRD afsnit 11.
-- Geocoding er i prototypen et opslagsværk over danske byer i `apps/core/geo.py`. Ukendte steder kan angives med manuelle koordinater.
+- Geocoding i `apps/core/geocoding.py`: først et lokalt opslagsværk over danske byer, derefter DAWA, Danmarks Adressers Web API fra Dataforsyningen, som slår rigtige adresser og bynavne op uden API nøgle. Ukendte steder kan stadig angives med manuelle koordinater.
+- E mail sendes til konsollen i udvikling. I drift sættes SMTP via miljøvariablerne `DJANGO_EMAIL_BACKEND`, `DJANGO_EMAIL_HOST`, `DJANGO_EMAIL_PORT`, `DJANGO_EMAIL_HOST_USER`, `DJANGO_EMAIL_HOST_PASSWORD` og `PAAVEJEN_BASE_URL` til links i mails.
 - Prisforslag i `apps/core/pricing.py`: grundbeløb + omvej + tid + størrelse, jf. PRD afsnit 12.
 - Matchscore vægtes med rute 40 %, tidspunkt 25 %, omvej 15 %, kapacitet 10 % og brugerhistorik 10 %, jf. PRD afsnit 10.
 

@@ -9,6 +9,7 @@ from django.utils import timezone
 
 from apps.matching.models import Match
 from apps.messaging.models import Message
+from apps.notifications import services as notifications
 from apps.transport.models import TransportRequest
 from apps.trips.models import Trip
 
@@ -41,6 +42,7 @@ def create_booking_request(match: Match) -> Booking:
             f"{match.transport_request.delivery_name} for {booking.agreed_price} kr."
         ),
     )
+    notifications.notify_booking_requested(booking)
     return booking
 
 
@@ -71,6 +73,7 @@ def accept_booking(booking: Booking) -> Booking:
         booking=booking, sender=None,
         content=f"{booking.driver.display_name} har accepteret forespørgslen.",
     )
+    notifications.notify_booking_accepted(booking)
     return booking
 
 
@@ -87,6 +90,7 @@ def decline_booking(booking: Booking) -> Booking:
         booking=booking, sender=None,
         content=f"{booking.driver.display_name} har afvist forespørgslen.",
     )
+    notifications.notify_booking_declined(booking)
     return booking
 
 
@@ -109,6 +113,7 @@ def confirm_pickup(booking: Booking, code: str) -> Booking:
         booking=booking, sender=None,
         content="Chaufføren har markeret varen som afhentet. Varen er under transport.",
     )
+    notifications.notify_pickup_confirmed(booking)
     return booking
 
 
@@ -135,6 +140,7 @@ def confirm_delivery(booking: Booking, code: str) -> Booking:
         booking=booking, sender=None,
         content="Varen er afleveret. Begge parter kan nu give en rating.",
     )
+    notifications.notify_delivery_confirmed(booking)
     return booking
 
 

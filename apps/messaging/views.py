@@ -3,6 +3,7 @@ from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect
 
 from apps.bookings.models import Booking
+from apps.notifications import services as notifications
 
 from .forms import MessageForm
 
@@ -19,4 +20,5 @@ def send_message(request, booking_pk):
             message.booking = booking
             message.sender = request.user
             message.save()
+            notifications.notify_new_message(message)
     return redirect("booking_detail", pk=booking.pk)
