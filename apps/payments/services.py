@@ -32,13 +32,27 @@ def reserve_payment(booking) -> Payment:
 
 
 def release_payment(booking) -> Payment | None:
-    """Frigiv betalingen efter bekræftet aflevering."""
+    """Frigiv betalingen, efter aflevering eller efter en afgjort konflikt."""
     payment = getattr(booking, "payment", None)
-    if payment is None or payment.status != Payment.Status.RESERVED:
+    if payment is None or payment.status not in (
+        Payment.Status.RESERVED, Payment.Status.ON_HOLD,
+    ):
         return payment
     payment.status = Payment.Status.RELEASED
     payment.released_at = timezone.now()
     payment.save(update_fields=["status", "released_at"])
+    return payment
+
+
+def refund_payment(booking) -> Payment | None:
+    """Refundér betalingen til afsenderen, fx efter en afgjort konflikt."""
+    payment = getattr(booking, "payment", None)
+    if payment is None or payment.status not in (
+        Payment.Status.RESERVED, Payment.Status.ON_HOLD,
+    ):
+        return payment
+    payment.status = Payment.Status.REFUNDED
+    payment.save(update_fields=["status"])
     return payment
 
 

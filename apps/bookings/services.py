@@ -239,6 +239,50 @@ def open_dispute(booking: Booking, by_user, reason: str) -> Booking:
 
 
 @transaction.atomic
+def resolve_dispute(booking: Booking, resolution: str, by_admin=None) -> Booking:
+    """Afgør en konflikt i ét trin, jf. PRD afsnit 20.
+
+    resolution "refund": afsenderen får medhold. Betalingen refunderes,
+    og bookingen annulleres.
+    resolution "release": chaufføren får medhold. Betalingen frigives,
+    og bookingen betragtes som leveret, så begge kan give rating.
+    """
+    if booking.status != Booking.Status.DISPUTED:
+        raise BookingError("Bookingen er ikke i konflikt.")
+    if resolution not in ("refund", "release"):
+        raise BookingError("Ukendt afgørelse.")
+
+    transport_request = booking.transport_request
+
+    if resolution == "refund":
+        payments.refund_payment(booking)
+        booking.status = Booking.Status.CANCELLED
+        transport_request.status = TransportRequest.Status.CANCELLED
+        outcome_text = (
+            "Konflikten er afgjort til afsenderens fordel. Betalingen er "
+            "refunderet, og bookingen er lukket."
+        )
+    else:
+        payments.release_payment(booking)
+        booking.status = Booking.Status.DELIVERED
+        if booking.delivered_at is None:
+            booking.delivered_at = timezone.now()
+        transport_request.status = TransportRequest.Status.DELIVERED
+        outcome_text = (
+            "Konflikten er afgjort til chaufførens fordel. Betalingen er "
+            "frigivet, og leveringen betragtes som gennemført."
+        )
+
+    booking.save()
+    transport_request.save(update_fields=["status"])
+
+    Message.objects.create(booking=booking, sender=None, content=outcome_text)
+    notifications.notify_dispute_resolved(booking, outcome_text)
+    log("dispute_resolved", user=by_admin, booking=booking, resolution=resolution)
+    return booking
+
+
+@transaction.atomic
 def complete_if_rated(booking: Booking) -> Booking:
     """Afslut bookingen, når begge parter har givet rating."""
     if booking.status != Booking.Status.DELIVERED:

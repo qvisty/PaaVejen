@@ -23,6 +23,9 @@ Dette er den første fungerende prototype, jf. PRD afsnit 40 og 57. Den beviser 
 - Betalingslivscyklus, jf. PRD afsnit 13 og 14: betalingen reserveres ved accept og frigives efter aflevering, med 15 % platformsgebyr. Udbyderen er "manual" i piloten, og abstraktionen er klar til Stripe Connect i fase 3.
 - Konflikthåndtering, jf. PRD afsnit 20: begge parter kan markere et problem, hvorefter betalingen sættes på pause, og administrator afgør sagen i Django Admin.
 - Annullering af accepterede bookinger før afhentning, hvor tur og opgave genåbnes til matching.
+- Konflikter afgøres i ét trin i admin: refundér til afsenderen eller frigiv til chaufføren, hvorefter booking, opgave, betaling, chat, auditlog og notifikationer opdateres samlet.
+- Vilkår med ansvarsfordeling og forbudte genstande. Accept dokumenteres med tidsstempel ved kontooprettelse, og hver opgave kræver bekræftelse af, at varen er lovlig.
+- Automatisk screening af opgavetekster mod forbudte kategorier. Match flages som åben rapport til admin og logges, uden at der blokeres alene på automatik, jf. PRD afsnit 26.
 - Rapportering af mistænkelige opgaver, jf. PRD afsnit 19.
 - Auditlog over alle væsentlige booking og betalingshændelser, jf. PRD afsnit 17.
 - Django Admin som internt administrationsinterface, inklusive betalinger, rapporter og auditlog.
@@ -52,6 +55,12 @@ python manage.py runserver
 ```
 
 Åbn derefter http://127.0.0.1:8000/ og opret to brugere. Lad den ene oprette turen Kolding → Sønderborg og den anden opgaven Kolding → Aabenraa. Systemet finder matchet, beregner omvejen og foreslår en pris.
+
+## Drift
+
+Appen er klar til en lille pilotdeploy: whitenoise serverer statiske filer, og med `DJANGO_DEBUG=0` aktiveres HTTPS redirect, sikre cookies og HSTS. Sæt `DJANGO_SECRET_KEY`, `DJANGO_ALLOWED_HOSTS`, `DJANGO_CSRF_TRUSTED_ORIGINS`, SMTP variablerne og `PAAVEJEN_BASE_URL`, kør `collectstatic` og `migrate`, og servér med en WSGI server som gunicorn.
+
+Risikovurderingen for misbrug, inklusive aktive og passive værn og kendte huller, ligger i `docs/RISIKOVURDERING.md`. Juridisk vurdering er fortsat en go live blokering før offentlig lancering, jf. PRD afsnit 48.
 
 ## Tests
 

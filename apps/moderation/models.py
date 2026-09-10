@@ -10,9 +10,17 @@ class Report(models.Model):
         RESOLVED = "resolved", "Behandlet"
         DISMISSED = "dismissed", "Afvist"
 
+    class Source(models.TextChoices):
+        USER = "user", "Bruger"
+        AUTO = "auto", "Automatisk screening"
+
     reporter = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE,
+        null=True, blank=True,
         related_name="reports_made", verbose_name="Anmelder",
+    )
+    source = models.CharField(
+        "Kilde", max_length=10, choices=Source.choices, default=Source.USER,
     )
     transport_request = models.ForeignKey(
         "transport.TransportRequest", on_delete=models.CASCADE,
@@ -35,4 +43,5 @@ class Report(models.Model):
 
     def __str__(self):
         target = self.transport_request or self.booking
-        return f"Rapport fra {self.reporter} om {target}"
+        who = self.reporter or "automatisk screening"
+        return f"Rapport fra {who} om {target}"

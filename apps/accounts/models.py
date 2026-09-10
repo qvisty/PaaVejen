@@ -6,6 +6,10 @@ class User(AbstractUser):
     """Bruger, jf. PRD afsnit 28."""
 
     phone = models.CharField("Telefon", max_length=20, blank=True)
+    terms_accepted_at = models.DateTimeField(
+        "Vilkår accepteret", null=True, blank=True,
+        help_text="Hvornår brugeren accepterede vilkårene ved oprettelse.",
+    )
 
     @property
     def average_rating(self) -> float | None:
