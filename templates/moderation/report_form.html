@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Rapportér opgave. PåVejen{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>Rapportér opgave</h2>
+  <p class="meta">
+    {{ transport_request.pickup_name }} → {{ transport_request.delivery_name }}
+  </p>
+  <p>
+    Ser opgaven mistænkelig ud, fx forbudte varer eller svindel? Beskriv
+    kort, hvad du har bemærket, så kigger vi på det.
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    <p><textarea name="reason" rows="3" required placeholder="Hvad er problemet?"></textarea></p>
+    <button type="submit">Send rapport</button>
+  </form>
+</div>
+{% endblock %}

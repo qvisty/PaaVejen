@@ -26,6 +26,7 @@ from apps.core.geo import haversine_km, point_to_segment
 from apps.core.routing import get_router
 from apps.transport.models import TransportRequest
 from apps.trips.models import Trip
+from apps.trips.services import materialize_recurring_trips
 
 from .models import Match
 
@@ -68,6 +69,14 @@ class MatchingService:
             TransportRequest.Status.MATCHED,
         ):
             return []
+        # Gentagne ture materialiseres i opgavens tidsvindue, så de kan
+        # matches som almindelige ture, jf. PRD afsnit 23.
+        window_start = transport_request.earliest_pickup or timezone.now()
+        materialize_recurring_trips(
+            start=max(window_start - DEPARTURE_SLACK, timezone.now()),
+            end=transport_request.latest_delivery,
+            exclude_driver=transport_request.owner,
+        )
         trips = (
             Trip.objects.filter(status=Trip.Status.ACTIVE)
             .exclude(driver=transport_request.owner)

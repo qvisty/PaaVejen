@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{% if is_new %}Opret gentagen tur{% else %}Rediger gentagen tur{% endif %}. PåVejen{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>{% if is_new %}Gentagen tur{% else %}Rediger gentagen tur{% endif %}</h2>
+  <p class="meta">
+    Kører du fast samme rute, fx til arbejde? Opret den én gang, så
+    matcher vi automatisk nye opgaver mod dine kommende ture.
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if is_new %}Opret gentagen tur{% else %}Gem ændringer{% endif %}</button>
+  </form>
+</div>
+{% endblock %}

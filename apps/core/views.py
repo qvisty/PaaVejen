@@ -5,7 +5,7 @@ from django.shortcuts import render
 from apps.bookings.models import Booking
 from apps.matching.models import Match
 from apps.transport.models import TransportRequest
-from apps.trips.models import Trip
+from apps.trips.models import RecurringTrip, Trip
 
 
 def home(request):
@@ -18,7 +18,11 @@ def home(request):
 @login_required
 def dashboard(request):
     user = request.user
-    trips = Trip.objects.filter(driver=user).exclude(status=Trip.Status.CANCELLED)
+    trips = (
+        Trip.objects.filter(driver=user, recurring_trip__isnull=True)
+        .exclude(status=Trip.Status.CANCELLED)
+    )
+    recurring_trips = RecurringTrip.objects.filter(driver=user, active=True)
     transport_requests = TransportRequest.objects.filter(owner=user).exclude(
         status=TransportRequest.Status.CANCELLED
     )
@@ -38,6 +42,7 @@ def dashboard(request):
         "core/dashboard.html",
         {
             "trips": trips,
+            "recurring_trips": recurring_trips,
             "transport_requests": transport_requests,
             "new_matches": new_matches,
             "incoming_bookings": incoming_bookings,

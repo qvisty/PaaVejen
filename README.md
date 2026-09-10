@@ -8,20 +8,23 @@ Ting, der skal flyttes, matches med mennesker, der alligevel skal samme vej.
 
 Dette er den første fungerende prototype, jf. PRD afsnit 40 og 57. Den beviser den tekniske kerne: opret en tur fra A til B, opret et transportbehov fra C til D, og lad systemet afgøre, om det giver mening at kombinere dem.
 
-## Hvad prototypen kan
+## Hvad platformen kan
 
-- Opret bruger, login og profil.
+- Opret bruger, login og profilside med rating, verificeringsniveau og gennemførte leveringer.
 - Opret, rediger og annuller ture med startsted, destination, afgang, maksimal omvej og ledig kapacitet.
-- Opret, rediger og annuller transportbehov med afhentning, aflevering, deadline, størrelse, vægt og cirka værdi.
+- Gentagne ture, jf. PRD afsnit 23: angiv ugedage, tidspunkt, omvej og kapacitet én gang, så materialiseres kommende ture automatisk, og nye opgaver matches mod dem.
+- Opret, rediger og annuller transportbehov med afhentning, aflevering, deadline, størrelse, vægt, cirka værdi og billede.
 - Automatisk matching med matchscore, omvejsberegning og prisforslag, både når en opgave og når en tur oprettes.
 - Send forespørgsel, accepter eller afvis booking.
 - Afhentningskode og afleveringskode, der bekræfter statusskift i transportflowet.
 - Privat chat pr. booking med systembeskeder ved statusændringer.
 - Gensidig rating efter aflevering. Bookingen afsluttes, når begge har vurderet.
 - E mail notifikationer ved nyt match, forespørgsel, accept, afvisning, afhentning, aflevering og nye chatbeskeder, jf. PRD afsnit 22.
-- Django Admin som internt administrationsinterface.
+- Rapportering af mistænkelige opgaver, jf. PRD afsnit 19.
+- Auditlog over alle væsentlige bookinghændelser, jf. PRD afsnit 17.
+- Django Admin som internt administrationsinterface, inklusive rapporter og auditlog.
 
-Bevidst udeladt i prototypen, jf. PRD afsnit 40: betaling, MitID, moderation, forsikring, billeder og push og SMS notifikationer.
+Dermed er MVP fra PRD afsnit 38 dækket, med én bevidst undtagelse: betaling håndteres uden for platformen i den lukkede pilot, som PRD'en åbner for. Stadig udeladt: MitID, forsikring, push og SMS.
 
 ## Teknisk
 

@@ -11,7 +11,7 @@ from .models import TransportRequest
 @login_required
 def request_create(request):
     if request.method == "POST":
-        form = TransportRequestForm(request.POST)
+        form = TransportRequestForm(request.POST, request.FILES)
         if form.is_valid():
             transport_request = form.save(commit=False)
             transport_request.owner = request.user
@@ -50,7 +50,9 @@ def request_detail(request, pk):
 def request_edit(request, pk):
     transport_request = get_object_or_404(TransportRequest, pk=pk, owner=request.user)
     if request.method == "POST":
-        form = TransportRequestForm(request.POST, instance=transport_request)
+        form = TransportRequestForm(
+            request.POST, request.FILES, instance=transport_request,
+        )
         if form.is_valid():
             form.save()
             MatchingService().find_matches_for_request(transport_request)

@@ -33,6 +33,7 @@
         <span class="status-badge">{{ match.get_status_display }}</span>
       </div>
       <div class="meta">{{ match.transport_request.description|truncatechars:120 }}</div>
+      <div class="meta"><a href="{% url 'report_request' match.transport_request.pk %}">Rapportér opgaven</a></div>
     </div>
   </div>
   {% empty %}

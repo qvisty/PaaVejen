@@ -6,6 +6,9 @@
 <div class="card">
   <h2>{{ transport_request.pickup_name }} → {{ transport_request.delivery_name }}</h2>
   <p>{{ transport_request.description }}</p>
+  {% if transport_request.image %}
+  <p><img src="{{ transport_request.image.url }}" alt="Billede af varen" style="max-width: 320px; border-radius: 10px;"></p>
+  {% endif %}
   <table class="simple">
     <tr><td>Opgavetype</td><td>{{ transport_request.get_category_display }}</td></tr>
     <tr><td>Størrelse</td><td>{{ transport_request.get_size_display }}</td></tr>

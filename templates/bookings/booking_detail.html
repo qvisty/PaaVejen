@@ -6,6 +6,9 @@
 <div class="card">
   <h2>{{ booking.transport_request.pickup_name }} → {{ booking.transport_request.delivery_name }}</h2>
   <p>{{ booking.transport_request.description }}</p>
+  {% if booking.transport_request.image %}
+  <p><img src="{{ booking.transport_request.image.url }}" alt="Billede af varen" style="max-width: 320px; border-radius: 10px;"></p>
+  {% endif %}
   <table class="simple">
     <tr><td>Chauffør</td><td>{{ booking.driver.display_name }}</td></tr>
     <tr><td>Afsender</td><td>{{ booking.customer.display_name }}</td></tr>

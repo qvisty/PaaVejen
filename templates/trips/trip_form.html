@@ -11,5 +11,10 @@
     {{ form.as_p }}
     <button type="submit">{% if is_new %}Opret tur{% else %}Gem ændringer{% endif %}</button>
   </form>
+  {% if is_new %}
+  <p class="meta">
+    Kører du fast samme rute? <a href="{% url 'recurring_create' %}">Opret en gentagen tur</a>.
+  </p>
+  {% endif %}
 </div>
 {% endblock %}
