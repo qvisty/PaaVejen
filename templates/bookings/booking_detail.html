@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block title %}Booking. PåVejen{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>{{ booking.transport_request.pickup_name }} → {{ booking.transport_request.delivery_name }}</h2>
+  <p>{{ booking.transport_request.description }}</p>
+  <table class="simple">
+    <tr><td>Chauffør</td><td>{{ booking.driver.display_name }}</td></tr>
+    <tr><td>Afsender</td><td>{{ booking.customer.display_name }}</td></tr>
+    <tr><td>Tur</td><td>{{ booking.trip.origin_name }} → {{ booking.trip.destination_name }}, {{ booking.trip.departure_time|date:"l j. F H:i" }}</td></tr>
+    <tr><td>Omvej</td><td>+{{ booking.match.detour_minutes|floatformat:0 }} min. / {{ booking.match.detour_km|floatformat:0 }} km</td></tr>
+    <tr><td>Pris</td><td>{{ booking.agreed_price }} kr.</td></tr>
+    <tr><td>Status</td><td><span class="status-badge">{{ booking.get_status_display }}</span></td></tr>
+  </table>
+
+  {% if booking.status == "pending" and is_driver %}
+  <div class="actions">
+    <form method="post" action="{% url 'booking_accept' booking.pk %}">
+      {% csrf_token %}
+      <button type="submit">Accepter opgaven</button>
+    </form>
+    <form method="post" action="{% url 'booking_decline' booking.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="button danger">Afvis</button>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if booking.status == "accepted" %}
+    {% if is_driver %}
+      <h3 class="section-title">Afhentning</h3>
+      <p class="meta">Bed afsenderen om afhentningskoden, når du henter varen.</p>
+      <form method="post" action="{% url 'booking_pickup' booking.pk %}">
+        {% csrf_token %}
+        <p><input type="text" name="code" inputmode="numeric" maxlength="4" placeholder="Afhentningskode" required></p>
+        <button type="submit">Bekræft afhentning</button>
+      </form>
+    {% else %}
+      <h3 class="section-title">Din afhentningskode</h3>
+      <p class="meta">Giv koden til chaufføren ved afhentning.</p>
+      <div class="code-box">{{ booking.pickup_code }}</div>
+    {% endif %}
+  {% endif %}
+
+  {% if booking.status == "collected" %}
+    {% if is_driver %}
+      <h3 class="section-title">Aflevering</h3>
+      <p class="meta">Bed modtageren om afleveringskoden, når du afleverer varen.</p>
+      <form method="post" action="{% url 'booking_deliver' booking.pk %}">
+        {% csrf_token %}
+        <p><input type="text" name="code" inputmode="numeric" maxlength="4" placeholder="Afleveringskode" required></p>
+        <button type="submit">Bekræft aflevering</button>
+      </form>
+    {% else %}
+      <h3 class="section-title">Din afleveringskode</h3>
+      <p class="meta">Varen er under transport. Giv koden til den, der modtager varen.</p>
+      <div class="code-box">{{ booking.delivery_code }}</div>
+    {% endif %}
+  {% endif %}
+
+  {% if booking.status == "delivered" or booking.status == "completed" %}
+    {% if not my_rating %}
+    <div class="actions">
+      <a class="button" href="{% url 'rate_booking' booking.pk %}">Giv en rating</a>
+    </div>
+    {% else %}
+    <p class="meta">Du har givet {{ my_rating.score }} stjerner.</p>
+    {% endif %}
+  {% endif %}
+</div>
+
+<h2 class="section-title">Chat</h2>
+<div class="card">
+  <div class="chat">
+    {% for message in chat_messages %}
+      {% if message.is_system %}
+        <div class="chat-message system">{{ message.content }}</div>
+      {% else %}
+        <div class="chat-message {% if message.sender_id == user.id %}mine{% endif %}">
+          <div class="who">{{ message.sender.display_name }}, {{ message.created_at|date:"j. F H:i" }}</div>
+          {{ message.content }}
+        </div>
+      {% endif %}
+    {% empty %}
+      <p class="meta">Ingen beskeder endnu.</p>
+    {% endfor %}
+  </div>
+  <form method="post" action="{% url 'message_send' booking.pk %}">
+    {% csrf_token %}
+    {{ message_form.as_p }}
+    <button type="submit">Send</button>
+  </form>
+</div>
+{% endblock %}

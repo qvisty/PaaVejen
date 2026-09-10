@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Opret konto. PåVejen{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>Opret konto</h2>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Opret konto</button>
+  </form>
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}Transportopgave. PåVejen{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>{{ transport_request.pickup_name }} → {{ transport_request.delivery_name }}</h2>
+  <p>{{ transport_request.description }}</p>
+  <table class="simple">
+    <tr><td>Opgavetype</td><td>{{ transport_request.get_category_display }}</td></tr>
+    <tr><td>Størrelse</td><td>{{ transport_request.get_size_display }}</td></tr>
+    {% if transport_request.weight_kg %}
+    <tr><td>Vægt</td><td>cirka {{ transport_request.weight_kg }} kg</td></tr>
+    {% endif %}
+    {% if transport_request.estimated_value %}
+    <tr><td>Cirka værdi</td><td>{{ transport_request.estimated_value }} kr.</td></tr>
+    {% endif %}
+    {% if transport_request.earliest_pickup %}
+    <tr><td>Tidligste afhentning</td><td>{{ transport_request.earliest_pickup|date:"j. F H:i" }}</td></tr>
+    {% endif %}
+    <tr><td>Seneste aflevering</td><td>{{ transport_request.latest_delivery|date:"j. F H:i" }}</td></tr>
+    <tr><td>Status</td><td><span class="status-badge">{{ transport_request.get_status_display }}</span></td></tr>
+  </table>
+  <div class="actions">
+    {% if transport_request.status == "published" or transport_request.status == "matched" %}
+      <a class="button subtle" href="{% url 'request_edit' transport_request.pk %}">Rediger</a>
+      <a class="button danger" href="{% url 'request_cancel' transport_request.pk %}">Annuller</a>
+    {% endif %}
+  </div>
+</div>
+
+<h2 class="section-title">Chauffører, der næsten skal samme vej</h2>
+<div class="card-list">
+  {% for match in matches %}
+  <div class="card">
+    <div class="match-card">
+      <div class="match-score">{{ match.match_score }} %</div>
+      <div>
+        <strong>{{ match.trip.origin_name }} → {{ match.trip.destination_name }}</strong>
+        <div class="meta">
+          {{ match.trip.departure_time|date:"l j. F H:i" }},
+          +{{ match.detour_minutes|floatformat:0 }} min. omvej,
+          {{ match.suggested_price }} kr.
+        </div>
+        <div class="meta">
+          {{ match.trip.driver.display_name }}
+          {% if match.trip.driver.average_rating %}
+            ★ {{ match.trip.driver.average_rating|floatformat:1 }}
+          {% endif %}
+        </div>
+      </div>
+      <div>
+        {% if match.status == "suggested" %}
+        <form method="post" action="{% url 'match_send_request' match.pk %}">
+          {% csrf_token %}
+          <button type="submit">Send forespørgsel</button>
+        </form>
+        {% else %}
+        <span class="status-badge">{{ match.get_status_display }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p class="meta">
+    Ingen matches endnu. Du får besked, når en chauffør opretter en tur
+    langs ruten.
+  </p>
+  {% endfor %}
+</div>
+{% endblock %}
