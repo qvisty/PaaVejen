@@ -35,7 +35,9 @@ class AuditTrailTests(TestCase):
             [
                 "booking_requested",
                 "booking_accepted",
+                "payment_reserved",
                 "pickup_confirmed",
+                "payment_released",
                 "delivery_confirmed",
             ],
         )

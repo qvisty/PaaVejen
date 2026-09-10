@@ -15,6 +15,15 @@
     <tr><td>Tur</td><td>{{ booking.trip.origin_name }} → {{ booking.trip.destination_name }}, {{ booking.trip.departure_time|date:"l j. F H:i" }}</td></tr>
     <tr><td>Omvej</td><td>+{{ booking.match.detour_minutes|floatformat:0 }} min. / {{ booking.match.detour_km|floatformat:0 }} km</td></tr>
     <tr><td>Pris</td><td>{{ booking.agreed_price }} kr.</td></tr>
+    {% if booking.payment %}
+    <tr>
+      <td>Betaling</td>
+      <td>
+        <span class="status-badge">{{ booking.payment.get_status_display }}</span>
+        {% if is_driver %}{{ booking.payment.driver_payout }} kr. til dig efter gebyr{% endif %}
+      </td>
+    </tr>
+    {% endif %}
     <tr><td>Status</td><td><span class="status-badge">{{ booking.get_status_display }}</span></td></tr>
   </table>
 
@@ -61,6 +70,34 @@
       <p class="meta">Varen er under transport. Giv koden til den, der modtager varen.</p>
       <div class="code-box">{{ booking.delivery_code }}</div>
     {% endif %}
+  {% endif %}
+
+  {% if booking.status == "accepted" %}
+  <div class="actions">
+    <form method="post" action="{% url 'booking_cancel' booking.pk %}"
+          onsubmit="return confirm('Er du sikker på, at du vil annullere bookingen?');">
+      {% csrf_token %}
+      <button type="submit" class="button subtle">Annullér booking</button>
+    </form>
+  </div>
+  {% endif %}
+
+  {% if booking.status == "accepted" or booking.status == "collected" or booking.status == "delivered" %}
+  <details style="margin-top: 1rem;">
+    <summary class="meta">Er der et problem med leveringen?</summary>
+    <form method="post" action="{% url 'booking_dispute' booking.pk %}">
+      {% csrf_token %}
+      <p><textarea name="reason" rows="2" required placeholder="Beskriv kort problemet"></textarea></p>
+      <button type="submit" class="button danger">Markér et problem</button>
+    </form>
+  </details>
+  {% endif %}
+
+  {% if booking.status == "disputed" %}
+  <p class="flash flash-error" style="margin-top: 1rem;">
+    Der er markeret et problem på denne booking. Betalingen er sat på
+    pause, mens sagen behandles. Brug chatten til forklaring og billeder.
+  </p>
   {% endif %}
 
   {% if booking.status == "delivered" or booking.status == "completed" %}

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     "apps.notifications",
     "apps.audit",
     "apps.moderation",
+    "apps.payments",
 ]
 
 MIDDLEWARE = [
@@ -139,4 +140,6 @@ PAAVEJEN = {
     "DEFAULT_MAX_DETOUR_MINUTES": 30,
     # Basis URL til links i notifikationsmails.
     "BASE_URL": os.environ.get("PAAVEJEN_BASE_URL", "http://127.0.0.1:8000"),
+    # Platformens andel af transportprisen, jf. PRD afsnit 13.
+    "PLATFORM_FEE_PERCENT": 15,
 }

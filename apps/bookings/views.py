@@ -66,6 +66,38 @@ def booking_decline(request, pk):
 
 
 @login_required
+def booking_cancel(request, pk):
+    booking = _get_booking_for(request.user, pk)
+    if request.method == "POST":
+        try:
+            services.cancel_booking(booking, request.user)
+            flash.info(request, "Bookingen er annulleret.")
+        except services.BookingError as error:
+            flash.error(request, str(error))
+    return redirect(booking)
+
+
+@login_required
+def booking_dispute(request, pk):
+    booking = _get_booking_for(request.user, pk)
+    if request.method == "POST":
+        reason = request.POST.get("reason", "").strip()
+        if not reason:
+            flash.error(request, "Beskriv kort, hvad problemet er.")
+            return redirect(booking)
+        try:
+            services.open_dispute(booking, request.user, reason)
+            flash.info(
+                request,
+                "Problemet er registreret, og betalingen er sat på pause. "
+                "Vi kigger på sagen.",
+            )
+        except services.BookingError as error:
+            flash.error(request, str(error))
+    return redirect(booking)
+
+
+@login_required
 def booking_pickup(request, pk):
     booking = _get_booking_for(request.user, pk)
     if request.method == "POST" and request.user.id == booking.driver_id:

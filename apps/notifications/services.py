@@ -132,6 +132,37 @@ def notify_delivery_confirmed(booking) -> None:
         )
 
 
+def notify_booking_cancelled(booking, by_user) -> None:
+    other = booking.customer if by_user == booking.driver else booking.driver
+    url = f"{_base_url()}{booking.get_absolute_url()}"
+    _send(
+        other,
+        "Booking annulleret",
+        (
+            f"{by_user.display_name} har annulleret bookingen "
+            f"{booking.transport_request.pickup_name} → "
+            f"{booking.transport_request.delivery_name}.\n"
+            f"Se detaljer: {url}"
+        ),
+    )
+
+
+def notify_dispute_opened(booking, by_user) -> None:
+    other = booking.customer if by_user == booking.driver else booking.driver
+    url = f"{_base_url()}{booking.get_absolute_url()}"
+    _send(
+        other,
+        "Der er markeret et problem",
+        (
+            f"{by_user.display_name} har markeret et problem på bookingen "
+            f"{booking.transport_request.pickup_name} → "
+            f"{booking.transport_request.delivery_name}. Betalingen er sat "
+            "på pause, mens sagen behandles.\n"
+            f"Skriv din forklaring i chatten: {url}"
+        ),
+    )
+
+
 def notify_new_message(message) -> None:
     booking = message.booking
     recipient = booking.customer if message.sender_id == booking.driver_id else booking.driver
