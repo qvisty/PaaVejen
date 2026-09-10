@@ -62,7 +62,7 @@ ROOT_URLCONF = "config.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
+        "DIRS": [p for p in [BASE_DIR / "templates"] if p.is_dir()],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -110,7 +110,7 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATICFILES_DIRS = [p for p in [BASE_DIR / "static"] if p.is_dir()]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
 STORAGES = {
