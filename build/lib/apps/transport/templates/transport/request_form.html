@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}{% if is_new %}Opret transportopgave{% else %}Rediger opgave{% endif %}. PåVejen{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>{% if is_new %}Jeg skal have noget med{% else %}Rediger opgave{% endif %}</h2>
+  <p class="meta">Beskriv hvad der skal flyttes, så finder vi nogen, der alligevel kommer forbi.</p>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if is_new %}Opret opgave{% else %}Gem ændringer{% endif %}</button>
+  </form>
+</div>
+{% endblock %}

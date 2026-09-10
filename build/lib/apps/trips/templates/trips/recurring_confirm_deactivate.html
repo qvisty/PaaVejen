@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Deaktivér gentagen tur</h2>
+  <p>
+    Er du sikker på, at du vil deaktivere {{ recurring.origin_name }} →
+    {{ recurring.destination_name }}? Kommende ture uden booking fjernes.
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="actions">
+      <button type="submit" class="button danger">Ja, deaktivér</button>
+      <a class="button subtle" href="{{ recurring.get_absolute_url }}">Tilbage</a>
+    </div>
+  </form>
+</div>
+{% endblock %}
