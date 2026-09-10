@@ -18,6 +18,12 @@ DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
 
+# Kører vi på Vercel? Miljøet sætter selv VERCEL=1.
+IS_VERCEL = bool(os.environ.get("VERCEL"))
+if IS_VERCEL:
+    DEBUG = False
+    ALLOWED_HOSTS += [".vercel.app"]
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -70,12 +76,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "config.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# Database: DATABASE_URL (fx Postgres på Railway eller Neon) hvis sat,
+# ellers SQLite. På Vercel ligger SQLite i /tmp og er flygtig: fint til
+# en hurtig fremvisning, ikke til en pilot med rigtige data.
+if os.environ.get("DATABASE_URL"):
+    import dj_database_url
+
+    DATABASES = {"default": dj_database_url.config(conn_max_age=600)}
+else:
+    _default_sqlite = "/tmp/paavejen.sqlite3" if IS_VERCEL else BASE_DIR / "db.sqlite3"
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": os.environ.get("DJANGO_DB_PATH", _default_sqlite),
+        }
     }
-}
 
 AUTH_USER_MODEL = "accounts.User"
 
@@ -111,7 +126,12 @@ if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
         origin for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if origin
     ]
-    SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "1") == "1"
+    if IS_VERCEL:
+        CSRF_TRUSTED_ORIGINS.append("https://*.vercel.app")
+    # Vercel terminerer selv TLS, så redirect er unødvendig der.
+    SECURE_SSL_REDIRECT = (
+        os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "0" if IS_VERCEL else "1") == "1"
+    )
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
@@ -119,7 +139,11 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 
 MEDIA_URL = "media/"
-MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = Path(os.environ.get("DJANGO_MEDIA_ROOT", "/tmp/paavejen-media" if IS_VERCEL else BASE_DIR / "media"))
+
+# På Vercel serveres statiske filer direkte fra kildemapperne, da der
+# ikke køres collectstatic i serverless miljøet.
+WHITENOISE_USE_FINDERS = IS_VERCEL
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
