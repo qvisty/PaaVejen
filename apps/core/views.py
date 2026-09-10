@@ -8,6 +8,13 @@ from apps.transport.models import TransportRequest
 from apps.trips.models import RecurringTrip, Trip
 
 
+def terms(request):
+    """Vilkår og forbudte genstande, jf. PRD afsnit 19."""
+    from apps.core.constants import FORBIDDEN_ITEMS
+
+    return render(request, "core/terms.html", {"forbidden_items": FORBIDDEN_ITEMS})
+
+
 def home(request):
     """Forsiden: to store valg, jf. PRD afsnit 39."""
     if request.user.is_authenticated:

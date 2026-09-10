@@ -4,6 +4,24 @@ from django.test import TestCase
 User = get_user_model()
 
 
+class SignupTermsTests(TestCase):
+    def test_signup_requires_terms(self):
+        data = {
+            "username": "ny",
+            "password1": "sikkerKode123",
+            "password2": "sikkerKode123",
+        }
+        response = self.client.post("/konto/opret/", data)
+        self.assertEqual(response.status_code, 200)
+        self.assertFalse(User.objects.filter(username="ny").exists())
+
+        data["accept_terms"] = "on"
+        response = self.client.post("/konto/opret/", data)
+        self.assertEqual(response.status_code, 302)
+        user = User.objects.get(username="ny")
+        self.assertIsNotNone(user.terms_accepted_at)
+
+
 class ProfileTests(TestCase):
     def test_profile_requires_login(self):
         response = self.client.get("/konto/profil/")

@@ -19,6 +19,7 @@ class TransportRequestForm(GeocodeFormMixin, forms.ModelForm):
             "delivery_name", "delivery_lat", "delivery_lng",
             "earliest_pickup", "latest_delivery",
             "description", "size", "weight_kg", "estimated_value", "image",
+            "terms_accepted",
         ]
         widgets = {
             "earliest_pickup": forms.DateTimeInput(
@@ -37,3 +38,9 @@ class TransportRequestForm(GeocodeFormMixin, forms.ModelForm):
         self.fields["pickup_name"].help_text = "Fx Kolding"
         self.fields["delivery_name"].help_text = "Fx Aabenraa"
         self.fields["description"].help_text = "Fx: En stol købt på DBA."
+        self.fields["terms_accepted"].required = True
+        self.fields["terms_accepted"].label = (
+            "Jeg bekræfter, at varen ikke er en forbudt genstand, og at "
+            "værdien er under 5.000 kr."
+        )
+        self.fields["terms_accepted"].help_text = "Se vilkårene i sidefoden."

@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.matching.services import MatchingService
+from apps.moderation.services import screen_transport_request
 
 from .forms import TransportRequestForm
 from .models import TransportRequest
@@ -16,6 +17,7 @@ def request_create(request):
             transport_request = form.save(commit=False)
             transport_request.owner = request.user
             transport_request.save()
+            screen_transport_request(transport_request)
             found = MatchingService().find_matches_for_request(transport_request)
             if found:
                 messages.success(
@@ -55,6 +57,7 @@ def request_edit(request, pk):
         )
         if form.is_valid():
             form.save()
+            screen_transport_request(transport_request)
             MatchingService().find_matches_for_request(transport_request)
             messages.success(request, "Opgaven er opdateret.")
             return redirect(transport_request)

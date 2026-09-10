@@ -75,3 +75,37 @@ class PaymentAndDisputeTests(TestCase):
         booking_services.confirm_pickup(self.booking, self.booking.pickup_code)
         with self.assertRaises(booking_services.BookingError):
             booking_services.cancel_booking(self.booking, self.sender)
+
+    def test_resolve_dispute_refund(self):
+        booking_services.accept_booking(self.booking)
+        booking_services.open_dispute(self.booking, self.sender, "Varen er i stykker.")
+
+        booking_services.resolve_dispute(self.booking, "refund")
+
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, "cancelled")
+        payment = self.booking.payment
+        payment.refresh_from_db()
+        self.assertEqual(payment.status, Payment.Status.REFUNDED)
+        self.request.refresh_from_db()
+        self.assertEqual(self.request.status, TransportRequest.Status.CANCELLED)
+
+    def test_resolve_dispute_release(self):
+        booking_services.accept_booking(self.booking)
+        booking_services.confirm_pickup(self.booking, self.booking.pickup_code)
+        booking_services.open_dispute(self.booking, self.sender, "Uenighed.")
+
+        booking_services.resolve_dispute(self.booking, "release")
+
+        self.booking.refresh_from_db()
+        self.assertEqual(self.booking.status, "delivered")
+        payment = self.booking.payment
+        payment.refresh_from_db()
+        self.assertEqual(payment.status, Payment.Status.RELEASED)
+        self.request.refresh_from_db()
+        self.assertEqual(self.request.status, TransportRequest.Status.DELIVERED)
+
+    def test_resolve_dispute_requires_disputed_booking(self):
+        booking_services.accept_booking(self.booking)
+        with self.assertRaises(booking_services.BookingError):
+            booking_services.resolve_dispute(self.booking, "refund")

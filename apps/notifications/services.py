@@ -163,6 +163,16 @@ def notify_dispute_opened(booking, by_user) -> None:
     )
 
 
+def notify_dispute_resolved(booking, outcome_text: str) -> None:
+    url = f"{_base_url()}{booking.get_absolute_url()}"
+    for user in (booking.customer, booking.driver):
+        _send(
+            user,
+            "Konflikten er afgjort",
+            f"{outcome_text}\nSe bookingen: {url}",
+        )
+
+
 def notify_new_message(message) -> None:
     booking = message.booking
     recipient = booking.customer if message.sender_id == booking.driver_id else booking.driver

@@ -70,6 +70,10 @@ class TransportRequest(models.Model):
         "Billede", upload_to="opgaver/", null=True, blank=True,
         validators=[validate_image_size],
     )
+    terms_accepted = models.BooleanField(
+        "Vilkår bekræftet", default=False,
+        help_text="Ejeren har bekræftet, at varen ikke er en forbudt genstand.",
+    )
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.PUBLISHED,
     )

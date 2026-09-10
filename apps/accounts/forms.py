@@ -17,6 +17,12 @@ class ProfileForm(forms.ModelForm):
 
 
 class SignupForm(UserCreationForm):
+    accept_terms = forms.BooleanField(
+        label="Jeg har læst og accepterer vilkårene, herunder ansvarsfordelingen "
+              "og listen over forbudte genstande.",
+        required=True,
+    )
+
     class Meta:
         model = User
         fields = ("username", "first_name", "last_name", "email", "phone")
@@ -27,3 +33,12 @@ class SignupForm(UserCreationForm):
             "email": "E-mail",
             "phone": "Telefon",
         }
+
+    def save(self, commit=True):
+        from django.utils import timezone
+
+        user = super().save(commit=False)
+        user.terms_accepted_at = timezone.now()
+        if commit:
+            user.save()
+        return user

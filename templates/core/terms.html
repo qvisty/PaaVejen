@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block title %}Vilkår. PåVejen{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>Vilkår for pilotperioden</h2>
+  <p>
+    PåVejen er under afprøvning. Platformen matcher private personer,
+    der alligevel kører en rute, med private transportbehov. Aftalen om
+    transporten indgås direkte mellem afsender og chauffør, og i
+    pilotperioden afregnes betalingen mellem parterne selv.
+  </p>
+  <p>
+    Varer med en forventet værdi over 5.000 kr. må ikke transporteres
+    via PåVejen. Afsenderen skal oplyse varens cirka værdi ærligt, og
+    chaufføren skal behandle varen forsvarligt. Ved problemer bruges
+    "Markér et problem" på bookingen, hvorefter sagen behandles.
+  </p>
+
+  <h3>Ansvar</h3>
+  <p>
+    PåVejen er en formidlingsplatform, ikke en transportør, fragtfører
+    eller part i aftalen. Aftalen om transporten indgås direkte mellem
+    afsender og chauffør, og de valg, brugerne træffer, er deres eget
+    ansvar. Det betyder blandt andet:
+  </p>
+  <ul>
+    <li>Afsenderen er ansvarlig for, at varen er lovlig, korrekt beskrevet og forsvarligt pakket, og for at den oplyste værdi er retvisende.</li>
+    <li>Chaufføren er ansvarlig for at behandle varen forsvarligt og for, at transporten sker lovligt, herunder at bilen er lovlig og forsikret til almindelig privat kørsel.</li>
+    <li>PåVejen dækker ikke skader, bortkomst, tyveri, forsinkelse eller personskade i pilotperioden. Der er ingen transportforsikring gennem platformen endnu.</li>
+    <li>PåVejen kan afvise, skjule eller lukke opgaver, ture, bookinger og konti ved mistanke om misbrug, og kan videregive oplysninger til myndighederne ved ulovlige forhold.</li>
+    <li>Konflikter mellem parterne søges løst via platformens konflikthåndtering, men platformens afgørelse angår alene betalingsreservationen og brugen af platformen, ikke parternes eventuelle krav mod hinanden.</li>
+  </ul>
+
+  <h3>Forbudte genstande</h3>
+  <p>Følgende må ikke sendes eller transporteres via PåVejen:</p>
+  <ul>
+    {% for item in forbidden_items %}
+    <li>{{ item }}</li>
+    {% endfor %}
+  </ul>
+  <p>
+    Ser du en opgave, der virker mistænkelig, så brug rapportér
+    funktionen. Alle væsentlige hændelser logges, og misbrug medfører
+    udelukkelse fra platformen.
+  </p>
+</div>
+{% endblock %}
