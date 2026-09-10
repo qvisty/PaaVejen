@@ -7,6 +7,7 @@ auditspor og systembeskeder altid følger med en overgang.
 from django.db import transaction
 from django.utils import timezone
 
+from apps.audit.services import log
 from apps.matching.models import Match
 from apps.messaging.models import Message
 from apps.notifications import services as notifications
@@ -43,6 +44,8 @@ def create_booking_request(match: Match) -> Booking:
         ),
     )
     notifications.notify_booking_requested(booking)
+    log("booking_requested", user=booking.customer, booking=booking,
+        price=booking.agreed_price)
     return booking
 
 
@@ -74,6 +77,7 @@ def accept_booking(booking: Booking) -> Booking:
         content=f"{booking.driver.display_name} har accepteret forespørgslen.",
     )
     notifications.notify_booking_accepted(booking)
+    log("booking_accepted", user=booking.driver, booking=booking)
     return booking
 
 
@@ -91,6 +95,7 @@ def decline_booking(booking: Booking) -> Booking:
         content=f"{booking.driver.display_name} har afvist forespørgslen.",
     )
     notifications.notify_booking_declined(booking)
+    log("booking_declined", user=booking.driver, booking=booking)
     return booking
 
 
@@ -114,6 +119,7 @@ def confirm_pickup(booking: Booking, code: str) -> Booking:
         content="Chaufføren har markeret varen som afhentet. Varen er under transport.",
     )
     notifications.notify_pickup_confirmed(booking)
+    log("pickup_confirmed", user=booking.driver, booking=booking)
     return booking
 
 
@@ -141,6 +147,7 @@ def confirm_delivery(booking: Booking, code: str) -> Booking:
         content="Varen er afleveret. Begge parter kan nu give en rating.",
     )
     notifications.notify_delivery_confirmed(booking)
+    log("delivery_confirmed", user=booking.driver, booking=booking)
     return booking
 
 
@@ -155,4 +162,5 @@ def complete_if_rated(booking: Booking) -> Booking:
         transport_request = booking.transport_request
         transport_request.status = TransportRequest.Status.COMPLETED
         transport_request.save(update_fields=["status"])
+        log("booking_completed", booking=booking)
     return booking

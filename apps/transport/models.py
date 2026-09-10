@@ -7,6 +7,12 @@ from apps.core.constants import SIZE_CHOICES, SIZE_MOVING_BOX
 from apps.core.geo import Point
 
 
+def validate_image_size(image):
+    max_mb = 5
+    if image and image.size > max_mb * 1024 * 1024:
+        raise ValidationError(f"Billedet må højst fylde {max_mb} MB.")
+
+
 def validate_max_value(value):
     """Prototypen har en maksimal accepteret vareværdi, jf. PRD afsnit 18."""
     max_value = settings.PAAVEJEN["MAX_ITEM_VALUE"]
@@ -59,6 +65,10 @@ class TransportRequest(models.Model):
     weight_kg = models.PositiveIntegerField("Vægt cirka kg", null=True, blank=True)
     estimated_value = models.PositiveIntegerField(
         "Cirka værdi i kr.", null=True, blank=True, validators=[validate_max_value],
+    )
+    image = models.ImageField(
+        "Billede", upload_to="opgaver/", null=True, blank=True,
+        validators=[validate_image_size],
     )
     status = models.CharField(
         max_length=20, choices=Status.choices, default=Status.PUBLISHED,

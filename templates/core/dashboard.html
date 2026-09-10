@@ -62,6 +62,24 @@
 </div>
 {% endif %}
 
+{% if recurring_trips %}
+<h2 class="section-title">Mine gentagne ture</h2>
+<div class="card-list">
+  {% for recurring in recurring_trips %}
+  <div class="card match-card">
+    <div>
+      <strong>{{ recurring.origin_name }} → {{ recurring.destination_name }}</strong>
+      <div class="meta">
+        {{ recurring.weekday_labels }} kl. {{ recurring.departure_time|time:"H:i" }},
+        {{ recurring.get_capacity_display }}
+      </div>
+    </div>
+    <a class="button subtle" href="{{ recurring.get_absolute_url }}">Åbn</a>
+  </div>
+  {% endfor %}
+</div>
+{% endif %}
+
 <h2 class="section-title">Mine ture</h2>
 <div class="card-list">
   {% for trip in trips %}

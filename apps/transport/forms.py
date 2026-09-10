@@ -18,7 +18,7 @@ class TransportRequestForm(GeocodeFormMixin, forms.ModelForm):
             "pickup_name", "pickup_lat", "pickup_lng",
             "delivery_name", "delivery_lat", "delivery_lng",
             "earliest_pickup", "latest_delivery",
-            "description", "size", "weight_kg", "estimated_value",
+            "description", "size", "weight_kg", "estimated_value", "image",
         ]
         widgets = {
             "earliest_pickup": forms.DateTimeInput(

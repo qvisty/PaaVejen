@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     "apps.messaging",
     "apps.ratings",
     "apps.notifications",
+    "apps.audit",
+    "apps.moderation",
 ]
 
 MIDDLEWARE = [
