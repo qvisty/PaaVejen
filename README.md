@@ -20,11 +20,16 @@ Dette er den første fungerende prototype, jf. PRD afsnit 40 og 57. Den beviser 
 - Privat chat pr. booking med systembeskeder ved statusændringer.
 - Gensidig rating efter aflevering. Bookingen afsluttes, når begge har vurderet.
 - E mail notifikationer ved nyt match, forespørgsel, accept, afvisning, afhentning, aflevering og nye chatbeskeder, jf. PRD afsnit 22.
+- Betalingslivscyklus, jf. PRD afsnit 13 og 14: betalingen reserveres ved accept og frigives efter aflevering, med 15 % platformsgebyr. Udbyderen er "manual" i piloten, og abstraktionen er klar til Stripe Connect i fase 3.
+- Konflikthåndtering, jf. PRD afsnit 20: begge parter kan markere et problem, hvorefter betalingen sættes på pause, og administrator afgør sagen i Django Admin.
+- Annullering af accepterede bookinger før afhentning, hvor tur og opgave genåbnes til matching.
 - Rapportering af mistænkelige opgaver, jf. PRD afsnit 19.
-- Auditlog over alle væsentlige bookinghændelser, jf. PRD afsnit 17.
-- Django Admin som internt administrationsinterface, inklusive rapporter og auditlog.
+- Auditlog over alle væsentlige booking og betalingshændelser, jf. PRD afsnit 17.
+- Django Admin som internt administrationsinterface, inklusive betalinger, rapporter og auditlog.
 
-Dermed er MVP fra PRD afsnit 38 dækket, med én bevidst undtagelse: betaling håndteres uden for platformen i den lukkede pilot, som PRD'en åbner for. Stadig udeladt: MitID, forsikring, push og SMS.
+Dermed er MVP fra PRD afsnit 38 dækket. Pengestrømmen afvikles fortsat uden om platformen i den lukkede pilot, men hele flowet og gebyrmodellen er på plads. Stadig udeladt: rigtig betalingsudbyder, MitID, forsikring, push og SMS.
+
+Demodata: `python manage.py seed_demo` opretter to brugere, ture, en gentagen tur, en opgave med matches og en aktiv booking. Login jesper eller martin med kodeordet demo1234.
 
 ## Teknisk
 

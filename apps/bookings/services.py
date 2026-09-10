@@ -11,6 +11,7 @@ from apps.audit.services import log
 from apps.matching.models import Match
 from apps.messaging.models import Message
 from apps.notifications import services as notifications
+from apps.payments import services as payments
 from apps.transport.models import TransportRequest
 from apps.trips.models import Trip
 
@@ -76,8 +77,18 @@ def accept_booking(booking: Booking) -> Booking:
         booking=booking, sender=None,
         content=f"{booking.driver.display_name} har accepteret forespørgslen.",
     )
+    payment = payments.reserve_payment(booking)
+    Message.objects.create(
+        booking=booking, sender=None,
+        content=(
+            f"Betalingen på {payment.amount} kr. er reserveret og frigives "
+            "efter aflevering."
+        ),
+    )
     notifications.notify_booking_accepted(booking)
     log("booking_accepted", user=booking.driver, booking=booking)
+    log("payment_reserved", booking=booking, amount=payment.amount,
+        platform_fee=payment.platform_fee)
     return booking
 
 
@@ -146,8 +157,84 @@ def confirm_delivery(booking: Booking, code: str) -> Booking:
         booking=booking, sender=None,
         content="Varen er afleveret. Begge parter kan nu give en rating.",
     )
+    payment = payments.release_payment(booking)
+    if payment is not None:
+        Message.objects.create(
+            booking=booking, sender=None,
+            content=(
+                f"Betalingen er frigivet: {payment.driver_payout} kr. til "
+                f"chaufføren efter {payment.platform_fee} kr. i platformsgebyr."
+            ),
+        )
+        log("payment_released", booking=booking, amount=payment.amount)
     notifications.notify_delivery_confirmed(booking)
     log("delivery_confirmed", user=booking.driver, booking=booking)
+    return booking
+
+
+@transaction.atomic
+def cancel_booking(booking: Booking, by_user) -> Booking:
+    """Annullér en accepteret booking, før varen er afhentet.
+
+    Turen genåbnes, opgaven kan matches igen, og en eventuel
+    reservation annulleres.
+    """
+    if booking.status not in (Booking.Status.PENDING, Booking.Status.ACCEPTED):
+        raise BookingError("Bookingen kan ikke længere annulleres.")
+    booking.status = Booking.Status.CANCELLED
+    booking.save(update_fields=["status"])
+
+    payments.cancel_payment(booking)
+
+    match = booking.match
+    match.status = Match.Status.DECLINED
+    match.save(update_fields=["status"])
+
+    trip = booking.trip
+    if trip.status == Trip.Status.MATCHED:
+        trip.status = Trip.Status.ACTIVE
+        trip.save(update_fields=["status"])
+
+    transport_request = booking.transport_request
+    if transport_request.status == TransportRequest.Status.BOOKED:
+        transport_request.status = TransportRequest.Status.MATCHED
+        transport_request.save(update_fields=["status"])
+
+    Message.objects.create(
+        booking=booking, sender=None,
+        content=f"{by_user.display_name} har annulleret bookingen.",
+    )
+    notifications.notify_booking_cancelled(booking, by_user)
+    log("booking_cancelled", user=by_user, booking=booking)
+    return booking
+
+
+@transaction.atomic
+def open_dispute(booking: Booking, by_user, reason: str) -> Booking:
+    """Markér et problem, jf. PRD afsnit 20. Betalingen sættes på pause."""
+    if booking.status not in (
+        Booking.Status.ACCEPTED, Booking.Status.COLLECTED, Booking.Status.DELIVERED,
+    ):
+        raise BookingError("Der kan kun markeres et problem på en aktiv booking.")
+    booking.status = Booking.Status.DISPUTED
+    booking.save(update_fields=["status"])
+
+    payments.hold_payment(booking)
+
+    transport_request = booking.transport_request
+    transport_request.status = TransportRequest.Status.DISPUTED
+    transport_request.save(update_fields=["status"])
+
+    Message.objects.create(
+        booking=booking, sender=None,
+        content=(
+            f"{by_user.display_name} har markeret et problem. Betalingen er "
+            "sat på pause, mens sagen behandles."
+        ),
+    )
+    Message.objects.create(booking=booking, sender=by_user, content=reason)
+    notifications.notify_dispute_opened(booking, by_user)
+    log("dispute_opened", user=by_user, booking=booking, reason=reason)
     return booking
 
 
