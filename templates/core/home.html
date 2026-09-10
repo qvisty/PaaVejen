@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="hero">
+  <h1>PåVejen</h1>
+  <p>Match ture med ting, der skal samme vej.</p>
+</div>
+
+<div class="big-choices">
+  <a class="big-choice" href="{% url 'trip_create' %}">
+    Jeg kører
+    <small>Få lidt ud af den plads, du allerede har i bilen.</small>
+  </a>
+  <a class="big-choice secondary" href="{% url 'request_create' %}">
+    Jeg skal have noget med
+    <small>Find nogen, der alligevel kommer forbi.</small>
+  </a>
+</div>
+
+<div class="card">
+  <h3>Sådan virker det</h3>
+  <p>
+    Opret din tur eller dit transportbehov. PåVejen finder selv de bedste
+    matches ud fra rute, tidspunkt, omvej og plads i bilen. I aftaler
+    prisen, og afhentning og aflevering bekræftes med koder.
+  </p>
+</div>
+{% endblock %}

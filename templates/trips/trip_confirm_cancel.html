@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Annuller tur</h2>
+  <p>Er du sikker på, at du vil annullere turen {{ trip.origin_name }} → {{ trip.destination_name }}?</p>
+  <form method="post">
+    {% csrf_token %}
+    <div class="actions">
+      <button type="submit" class="button danger">Ja, annuller turen</button>
+      <a class="button subtle" href="{{ trip.get_absolute_url }}">Tilbage</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

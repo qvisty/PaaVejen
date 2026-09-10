@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Giv rating. PåVejen{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h2>Vurdér {{ reviewed_user.display_name }}</h2>
+  <p class="meta">
+    {{ booking.transport_request.pickup_name }} → {{ booking.transport_request.delivery_name }},
+    {{ booking.agreed_price }} kr.
+  </p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Send vurdering</button>
+  </form>
+</div>
+{% endblock %}
