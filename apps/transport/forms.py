@@ -4,19 +4,20 @@ from apps.core.forms import GeocodeFormMixin
 
 from .models import TransportRequest
 
-# Korte forklaringer af opgavetyperne, jf. PRD afsnit 7.
+# Korte forklaringer af opgavetyperne, jf. PRD afsnit 7. Forskellen er,
+# hvem der står med varen ved afhentningen.
 CATEGORY_DESCRIPTIONS = {
     TransportRequest.Category.BRING_ALONG: (
-        "Varen står klar ét sted og skal bare med til et andet, "
-        "fx en stol du har købt på DBA."
+        "En anden person står klar med varen, fx sælgeren af en stol, "
+        "du har købt på DBA. Chaufføren tager den bare med."
     ),
     TransportRequest.Category.PICK_UP: (
-        "Chaufføren henter varen for dig hos en butik eller person, "
-        "fx en Click & Collect ordre, og kører den hjem til dig."
+        "Chaufføren henter varen i en butik på dine vegne, fx en "
+        "Click & Collect ordre, hvor dit ordrenummer skal vises."
     ),
     TransportRequest.Category.DROP_OFF: (
-        "Du giver chaufføren varen, og den afleveres ved destinationen, "
-        "fx en vare der skal returneres til en butik."
+        "Du giver selv varen til chaufføren, som afleverer den ved "
+        "destinationen, fx en returnering til en butik."
     ),
 }
 
