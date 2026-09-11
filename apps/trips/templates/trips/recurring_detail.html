@@ -27,7 +27,7 @@
     <div>
       <strong>{{ trip.departure_time|date:"l j. F H:i" }}</strong>
       <div class="meta">
-        <span class="status-badge">{{ trip.get_status_display }}</span>
+        <span class="status-badge status-{{ trip.status }}">{{ trip.get_status_display }}</span>
         {{ trip.matches.count }} match{{ trip.matches.count|pluralize:"es" }}
       </div>
     </div>

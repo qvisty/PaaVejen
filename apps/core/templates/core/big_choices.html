@@ -1,0 +1,12 @@
+<div class="big-choices">
+  <a class="big-choice" href="{% url 'trip_create' %}">
+    <svg class="icon icon-big"><use href="#icon-car"/></svg>
+    <span>Jeg kører</span>
+    {% if with_text %}<small>Få lidt ud af den plads, du allerede har i bilen.</small>{% endif %}
+  </a>
+  <a class="big-choice secondary" href="{% url 'request_create' %}">
+    <svg class="icon icon-big"><use href="#icon-box"/></svg>
+    <span>Jeg skal have noget med</span>
+    {% if with_text %}<small>Find nogen, der alligevel kommer forbi.</small>{% endif %}
+  </a>
+</div>

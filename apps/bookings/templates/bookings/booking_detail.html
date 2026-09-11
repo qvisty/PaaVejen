@@ -19,12 +19,12 @@
     <tr>
       <td>Betaling</td>
       <td>
-        <span class="status-badge">{{ booking.payment.get_status_display }}</span>
+        <span class="status-badge status-{{ booking.payment.status }}">{{ booking.payment.get_status_display }}</span>
         {% if is_driver %}{{ booking.payment.driver_payout }} kr. til dig efter gebyr{% endif %}
       </td>
     </tr>
     {% endif %}
-    <tr><td>Status</td><td><span class="status-badge">{{ booking.get_status_display }}</span></td></tr>
+    <tr><td>Status</td><td><span class="status-badge status-{{ booking.status }}">{{ booking.get_status_display }}</span></td></tr>
   </table>
 
   {% if booking.status == "pending" and is_driver %}

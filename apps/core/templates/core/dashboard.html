@@ -5,13 +5,10 @@
 {% block content %}
 <h1>Hej {{ user.display_name }}</h1>
 
-<div class="big-choices">
-  <a class="big-choice" href="{% url 'trip_create' %}">Jeg kører</a>
-  <a class="big-choice secondary" href="{% url 'request_create' %}">Jeg skal have noget med</a>
-</div>
+{% include "core/big_choices.html" %}
 
 {% if incoming_bookings %}
-<h2 class="section-title">Forespørgsler til dig</h2>
+<h2 class="section-title"><svg class="icon icon-title"><use href="#icon-bell"/></svg> Forespørgsler til dig</h2>
 <div class="card-list">
   {% for booking in incoming_bookings %}
   <div class="card match-card">
@@ -26,7 +23,7 @@
 {% endif %}
 
 {% if new_matches %}
-<h2 class="section-title">Nye matches til dine opgaver</h2>
+<h2 class="section-title"><svg class="icon icon-title"><use href="#icon-bell"/></svg> Nye matches til dine opgaver</h2>
 <div class="card-list">
   {% for match in new_matches %}
   <div class="card match-card">
@@ -45,14 +42,14 @@
 {% endif %}
 
 {% if active_bookings %}
-<h2 class="section-title">Aktive leveringer</h2>
+<h2 class="section-title"><svg class="icon icon-title"><use href="#icon-box"/></svg> Aktive leveringer</h2>
 <div class="card-list">
   {% for booking in active_bookings %}
   <div class="card match-card">
     <div>
       <strong>{{ booking.transport_request.pickup_name }} → {{ booking.transport_request.delivery_name }}</strong>
       <div class="meta">
-        <span class="status-badge">{{ booking.get_status_display }}</span>
+        <span class="status-badge status-{{ booking.status }}">{{ booking.get_status_display }}</span>
         {{ booking.agreed_price }} kr.
       </div>
     </div>
@@ -63,7 +60,7 @@
 {% endif %}
 
 {% if recurring_trips %}
-<h2 class="section-title">Mine gentagne ture</h2>
+<h2 class="section-title"><svg class="icon icon-title"><use href="#icon-repeat"/></svg> Mine gentagne ture</h2>
 <div class="card-list">
   {% for recurring in recurring_trips %}
   <div class="card match-card">
@@ -80,7 +77,7 @@
 </div>
 {% endif %}
 
-<h2 class="section-title">Mine ture</h2>
+<h2 class="section-title"><svg class="icon icon-title"><use href="#icon-car"/></svg> Mine ture</h2>
 <div class="card-list">
   {% for trip in trips %}
   <div class="card match-card">
@@ -89,7 +86,7 @@
       <div class="meta">
         {{ trip.departure_time|date:"l j. F H:i" }},
         {{ trip.get_capacity_display }},
-        <span class="status-badge">{{ trip.get_status_display }}</span>
+        <span class="status-badge status-{{ trip.status }}">{{ trip.get_status_display }}</span>
       </div>
     </div>
     <a class="button subtle" href="{{ trip.get_absolute_url }}">Åbn</a>
@@ -99,7 +96,7 @@
   {% endfor %}
 </div>
 
-<h2 class="section-title">Mine transportopgaver</h2>
+<h2 class="section-title"><svg class="icon icon-title"><use href="#icon-box"/></svg> Mine transportopgaver</h2>
 <div class="card-list">
   {% for transport_request in transport_requests %}
   <div class="card match-card">
@@ -108,7 +105,7 @@
       <div class="meta">
         {{ transport_request.get_size_display }},
         senest {{ transport_request.latest_delivery|date:"j. F H:i" }},
-        <span class="status-badge">{{ transport_request.get_status_display }}</span>
+        <span class="status-badge status-{{ transport_request.status }}">{{ transport_request.get_status_display }}</span>
       </div>
     </div>
     <a class="button subtle" href="{{ transport_request.get_absolute_url }}">Åbn</a>
