@@ -238,6 +238,31 @@ input[type="number"], input[type="datetime-local"], select, textarea {
 
 .actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 0.5rem; }
 
+/* Kortvælger */
+.location-picker { position: relative; margin: 0.4rem 0 0.9rem; }
+.location-map {
+  height: 230px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  z-index: 0;
+}
+.location-suggestions {
+  margin: 0 0 0.4rem;
+  padding: 0;
+  list-style: none;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  max-height: 220px;
+  overflow-y: auto;
+}
+.location-suggestions li {
+  padding: 0.5rem 0.8rem;
+  cursor: pointer;
+}
+.location-suggestions li:hover { background: var(--bg); }
+
 table.simple { width: 100%; border-collapse: collapse; }
 table.simple td { padding: 0.25rem 0; vertical-align: top; }
 table.simple td:first-child { color: var(--muted); width: 45%; }

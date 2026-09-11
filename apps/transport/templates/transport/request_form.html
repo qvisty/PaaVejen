@@ -2,6 +2,10 @@
 
 {% block title %}{% if is_new %}Opret transportopgave{% else %}Rediger opgave{% endif %}. PåVejen{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+{% endblock %}
+
 {% block content %}
 <div class="card">
   <h2>{% if is_new %}Jeg skal have noget med{% else %}Rediger opgave{% endif %}</h2>
@@ -12,4 +16,10 @@
     <button type="submit">{% if is_new %}Opret opgave{% else %}Gem ændringer{% endif %}</button>
   </form>
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="{% static 'js/location-picker.js' %}"></script>
 {% endblock %}
