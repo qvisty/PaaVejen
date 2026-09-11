@@ -1,7 +1,8 @@
 :root {
   --primary: #1f6f5c;
   --primary-dark: #175647;
-  --accent: #f4a259;
+  --accent: #3d6b8e;
+  --accent-light: #4c80a8;
   --bg: #f7f6f3;
   --card: #ffffff;
   --text: #23292e;
@@ -156,11 +157,11 @@ body {
 }
 .big-choice:active { transform: translateY(-1px); }
 .big-choice.secondary {
-  background: linear-gradient(135deg, #f6b26f, var(--accent));
-  color: var(--text);
-  box-shadow: 0 2px 6px rgba(244, 162, 89, 0.25);
+  background: linear-gradient(135deg, var(--accent-light), var(--accent));
+  color: #fff;
+  box-shadow: 0 2px 6px rgba(61, 107, 142, 0.22);
 }
-.big-choice.secondary:hover { box-shadow: 0 10px 22px rgba(244, 162, 89, 0.4); }
+.big-choice.secondary:hover { box-shadow: 0 10px 22px rgba(61, 107, 142, 0.35); }
 .big-choice small {
   display: block;
   font-size: 0.85rem;
@@ -337,6 +338,9 @@ input:focus, select:focus, textarea:focus {
 }
 
 .match-score { animation: popIn 0.4s cubic-bezier(0.34, 1.4, 0.64, 1) both; }
+
+.report-link { margin-top: 1.2rem; }
+.report-link .icon { color: var(--muted); }
 
 /* Animationer */
 @keyframes fadeInUp {

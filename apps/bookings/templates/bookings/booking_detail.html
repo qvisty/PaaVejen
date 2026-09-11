@@ -100,6 +100,12 @@
   </p>
   {% endif %}
 
+  <p class="meta report-link">
+    <svg class="icon"><use href="#icon-shield"/></svg>
+    Er der noget mistænkeligt ved denne opgave?
+    <a href="{% url 'report_request' booking.transport_request.pk %}">Rapportér den her</a>.
+  </p>
+
   {% if booking.status == "delivered" or booking.status == "completed" %}
     {% if not my_rating %}
     <div class="actions">
