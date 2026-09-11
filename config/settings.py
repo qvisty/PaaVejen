@@ -24,6 +24,14 @@ if IS_VERCEL:
     DEBUG = False
     ALLOWED_HOSTS += [".vercel.app"]
 
+# Kører vi på Render? Miljøet sætter selv RENDER og RENDER_EXTERNAL_HOSTNAME.
+IS_RENDER = bool(os.environ.get("RENDER"))
+RENDER_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME", "")
+if IS_RENDER:
+    DEBUG = os.environ.get("DJANGO_DEBUG", "0") == "1"
+    if RENDER_HOSTNAME:
+        ALLOWED_HOSTS.append(RENDER_HOSTNAME)
+
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -128,9 +136,13 @@ if not DEBUG:
     ]
     if IS_VERCEL:
         CSRF_TRUSTED_ORIGINS.append("https://*.vercel.app")
-    # Vercel terminerer selv TLS, så redirect er unødvendig der.
+    if IS_RENDER and RENDER_HOSTNAME:
+        CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_HOSTNAME}")
+    # Vercel og Render terminerer selv TLS ved kanten.
     SECURE_SSL_REDIRECT = (
-        os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "0" if IS_VERCEL else "1") == "1"
+        os.environ.get(
+            "DJANGO_SECURE_SSL_REDIRECT", "0" if (IS_VERCEL or IS_RENDER) else "1"
+        ) == "1"
     )
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = True
@@ -184,7 +196,10 @@ PAAVEJEN = {
     # Standard maksimal omvej hvis chaufføren ikke har angivet en.
     "DEFAULT_MAX_DETOUR_MINUTES": 30,
     # Basis URL til links i notifikationsmails.
-    "BASE_URL": os.environ.get("PAAVEJEN_BASE_URL", "http://127.0.0.1:8000"),
+    "BASE_URL": os.environ.get(
+        "PAAVEJEN_BASE_URL",
+        f"https://{RENDER_HOSTNAME}" if RENDER_HOSTNAME else "http://127.0.0.1:8000",
+    ),
     # Platformens andel af transportprisen, jf. PRD afsnit 13.
     "PLATFORM_FEE_PERCENT": 15,
 }
