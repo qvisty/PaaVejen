@@ -342,6 +342,49 @@ input:focus, select:focus, textarea:focus {
 .report-link { margin-top: 1.2rem; }
 .report-link .icon { color: var(--muted); }
 
+/* Opgavetypevælger */
+.category-picker {
+  border: none;
+  margin: 0 0 1rem;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+}
+@media (min-width: 640px) {
+  .category-picker { grid-template-columns: 1fr 1fr 1fr; }
+}
+.category-picker legend {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+.category-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.75rem 0.85rem;
+  background: var(--card);
+  cursor: pointer;
+  font-weight: 400;
+  margin: 0;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.category-option:hover { border-color: var(--primary); }
+.category-option:has(input:checked) {
+  border-color: var(--primary);
+  background: #eef5f2;
+  box-shadow: 0 0 0 1px var(--primary);
+}
+.category-option input[type="radio"] {
+  margin-top: 0.2rem;
+  accent-color: var(--primary);
+}
+.category-text { display: block; }
+.category-text strong { display: block; margin-bottom: 0.15rem; }
+.category-text .meta { font-size: 0.85rem; line-height: 1.35; display: block; }
+
 /* Animationer */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(8px); }
