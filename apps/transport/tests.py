@@ -14,7 +14,9 @@ class RequestFormTests(TestCase):
         self.assertIn("Hent for mig", html)
         self.assertIn("Aflever for mig", html)
         self.assertIn("købt på DBA", html)
+        self.assertIn("category-illustration", html)
+        self.assertIn("anim-car", html)
         self.assertIn("Click &amp; Collect", html)
-        self.assertIn("returneres til en butik", html)
+        self.assertIn("returnering til en butik", html)
         # Standardvalget Tag med er markeret på forhånd.
         self.assertIn("checked", html)

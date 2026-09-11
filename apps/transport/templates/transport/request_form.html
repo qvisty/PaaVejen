@@ -19,11 +19,14 @@
       {{ form.category.errors }}
       {% for value, label, description in form.category_options %}
       <label class="category-option">
-        <input type="radio" name="{{ form.category.html_name }}" value="{{ value }}"
-               {% if form.category.value == value %}checked{% endif %} required>
-        <span class="category-text">
-          <strong>{{ label }}</strong>
-          <span class="meta">{{ description }}</span>
+        {% include "transport/illustrations/"|add:value|add:".html" %}
+        <span class="category-row">
+          <input type="radio" name="{{ form.category.html_name }}" value="{{ value }}"
+                 {% if form.category.value == value %}checked{% endif %} required>
+          <span class="category-text">
+            <strong>{{ label }}</strong>
+            <span class="meta">{{ description }}</span>
+          </span>
         </span>
       </label>
       {% endfor %}

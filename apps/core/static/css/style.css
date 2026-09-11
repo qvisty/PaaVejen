@@ -360,8 +360,8 @@ input:focus, select:focus, textarea:focus {
 }
 .category-option {
   display: flex;
-  align-items: flex-start;
-  gap: 0.55rem;
+  flex-direction: column;
+  gap: 0.5rem;
   border: 1px solid var(--border);
   border-radius: 10px;
   padding: 0.75rem 0.85rem;
@@ -370,6 +370,11 @@ input:focus, select:focus, textarea:focus {
   font-weight: 400;
   margin: 0;
   transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.category-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
 }
 .category-option:hover { border-color: var(--primary); }
 .category-option:has(input:checked) {
@@ -384,6 +389,57 @@ input:focus, select:focus, textarea:focus {
 .category-text { display: block; }
 .category-text strong { display: block; margin-bottom: 0.15rem; }
 .category-text .meta { font-size: 0.85rem; line-height: 1.35; display: block; }
+
+/* Illustrationer på opgavetypekortene */
+.category-illustration {
+  width: 100%;
+  height: 66px;
+  display: block;
+}
+.category-illustration path,
+.category-illustration circle,
+.category-illustration rect {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.category-illustration .il-road {
+  stroke: var(--border);
+  stroke-dasharray: 1 7;
+  stroke-width: 2.5;
+}
+.category-illustration .il-muted { stroke: var(--muted); opacity: 0.65; }
+.category-illustration .il-muted * { stroke: inherit; }
+.category-illustration .il-primary { stroke: var(--primary); }
+.category-illustration .il-box {
+  fill: #dde9f3;
+  stroke: var(--accent);
+}
+.category-illustration .il-box-line { stroke: var(--accent); stroke-width: 1.2; }
+.category-illustration .il-check-bg { fill: var(--card); stroke: var(--primary); }
+.category-illustration .il-check { stroke: var(--primary); }
+
+.anim-car {
+  animation: driveAcross 5s ease-in-out infinite;
+}
+@keyframes driveAcross {
+  0% { transform: translateX(0); opacity: 0; }
+  10% { transform: translateX(0); opacity: 1; }
+  60% { transform: translateX(var(--drive, 50px)); opacity: 1; }
+  74% { transform: translateX(var(--drive, 50px)); opacity: 0; }
+  100% { transform: translateX(var(--drive, 50px)); opacity: 0; }
+}
+.anim-check {
+  animation: checkPop 5s ease-in-out infinite;
+  transform-origin: center;
+  opacity: 0;
+}
+@keyframes checkPop {
+  0%, 55% { opacity: 0; transform: scale(0.6); }
+  64%, 90% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1); }
+}
 
 /* Animationer */
 @keyframes fadeInUp {
