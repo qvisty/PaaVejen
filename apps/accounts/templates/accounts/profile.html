@@ -30,6 +30,20 @@
   </table>
 </div>
 
+<div class="card" id="push-section">
+  <h3><svg class="icon icon-title"><use href="#icon-bell"/></svg> Notifikationer</h3>
+  <p class="meta" id="push-status">Undersøger…</p>
+  <div class="actions">
+    <button type="button" class="button" id="push-enable" hidden>Slå push notifikationer til</button>
+    <button type="button" class="button subtle" id="push-disable" hidden>Slå push fra på denne enhed</button>
+  </div>
+  <p class="meta">
+    Du får altid besked pr. e mail. Push giver dig beskeden med det samme
+    på denne enhed. På iPhone skal PåVejen først føjes til hjemmeskærmen
+    via Del, Føj til hjemmeskærm.
+  </p>
+</div>
+
 <div class="card">
   <h3>Rediger oplysninger</h3>
   <form method="post">
@@ -51,4 +65,9 @@
   {% endfor %}
 </div>
 {% endif %}
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="{% static 'js/push.js' %}"></script>
 {% endblock %}

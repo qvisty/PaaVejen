@@ -3,8 +3,13 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
 
+from apps.notifications import views as notification_views
+
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("sw.js", notification_views.service_worker, name="service_worker"),
+    path("manifest.webmanifest", notification_views.manifest, name="manifest"),
+    path("notifikationer/", include("apps.notifications.urls")),
     path("", include("apps.core.urls")),
     path("konto/", include("apps.accounts.urls")),
     path("ture/", include("apps.trips.urls")),

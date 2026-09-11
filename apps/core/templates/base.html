@@ -6,6 +6,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}PåVejen{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link rel="manifest" href="{% url 'manifest' %}">
+  <link rel="icon" href="{% static 'img/icon.svg' %}" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="{% static 'img/icon.svg' %}">
+  <meta name="theme-color" content="#1f6f5c">
   {% block extra_head %}{% endblock %}
 </head>
 <body>

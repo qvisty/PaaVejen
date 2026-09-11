@@ -19,7 +19,8 @@ Dette er den første fungerende prototype, jf. PRD afsnit 40 og 57. Den beviser 
 - Afhentningskode og afleveringskode, der bekræfter statusskift i transportflowet.
 - Privat chat pr. booking med systembeskeder ved statusændringer.
 - Gensidig rating efter aflevering. Bookingen afsluttes, når begge har vurderet.
-- E mail notifikationer ved nyt match, forespørgsel, accept, afvisning, afhentning, aflevering og nye chatbeskeder, jf. PRD afsnit 22.
+- Notifikationer pr. e mail og web push ved nyt match, forespørgsel, accept, afvisning, afhentning, aflevering, konflikt og nye chatbeskeder, jf. PRD afsnit 22. Push slås til på profilsiden, VAPID nøgler genereres automatisk og gemmes i databasen, og døde abonnementer ryddes op af sig selv.
+- PWA: manifest, service worker og appikon, så PåVejen kan installeres på hjemmeskærmen, jf. PRD fase 4. På iPhone er det samtidig forudsætningen for push.
 - Betalingslivscyklus, jf. PRD afsnit 13 og 14: betalingen reserveres ved accept og frigives efter aflevering, med 15 % platformsgebyr. Udbyderen er "manual" i piloten, og abstraktionen er klar til Stripe Connect i fase 3.
 - Konflikthåndtering, jf. PRD afsnit 20: begge parter kan markere et problem, hvorefter betalingen sættes på pause, og administrator afgør sagen i Django Admin.
 - Annullering af accepterede bookinger før afhentning, hvor tur og opgave genåbnes til matching.
