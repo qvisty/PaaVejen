@@ -22,7 +22,7 @@
     <tr><td>Tidligste afhentning</td><td>{{ transport_request.earliest_pickup|date:"j. F H:i" }}</td></tr>
     {% endif %}
     <tr><td>Seneste aflevering</td><td>{{ transport_request.latest_delivery|date:"j. F H:i" }}</td></tr>
-    <tr><td>Status</td><td><span class="status-badge">{{ transport_request.get_status_display }}</span></td></tr>
+    <tr><td>Status</td><td><span class="status-badge status-{{ transport_request.status }}">{{ transport_request.get_status_display }}</span></td></tr>
   </table>
   <div class="actions">
     {% if transport_request.status == "published" or transport_request.status == "matched" %}
@@ -59,7 +59,7 @@
           <button type="submit">Send forespørgsel</button>
         </form>
         {% else %}
-        <span class="status-badge">{{ match.get_status_display }}</span>
+        <span class="status-badge status-{{ match.status }}">{{ match.get_status_display }}</span>
         {% endif %}
       </div>
     </div>
