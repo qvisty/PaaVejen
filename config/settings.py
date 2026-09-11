@@ -129,6 +129,10 @@ STORAGES = {
     },
 }
 
+# Send origin som referrer til eksterne tjenester som korttjenesten,
+# i stedet for Djangos standard same-origin, der helt udelader den.
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+
 # Sikkerhed i drift. Slås til, når DEBUG er slået fra.
 if not DEBUG:
     CSRF_TRUSTED_ORIGINS = [
