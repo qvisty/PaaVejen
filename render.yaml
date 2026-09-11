@@ -6,11 +6,15 @@ services:
     runtime: python
     plan: free
     buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: python manage.py migrate && gunicorn config.wsgi
+    startCommand: python manage.py migrate && python manage.py ensure_superuser && python manage.py cleanup_demo_users && gunicorn config.wsgi
     envVars:
       - key: DJANGO_DEBUG
         value: "0"
       - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_SUPERUSER_USERNAME
+        value: admin
+      - key: DJANGO_SUPERUSER_PASSWORD
         generateValue: true
       - key: PYTHON_VERSION
         value: "3.12.7"
