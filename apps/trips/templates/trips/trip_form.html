@@ -2,6 +2,10 @@
 
 {% block title %}{% if is_new %}Opret tur{% else %}Rediger tur{% endif %}. PåVejen{% endblock %}
 
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+{% endblock %}
+
 {% block content %}
 <div class="card">
   <h2>{% if is_new %}Jeg kører{% else %}Rediger tur{% endif %}</h2>
@@ -17,4 +21,10 @@
   </p>
   {% endif %}
 </div>
+{% endblock %}
+
+{% block scripts %}
+{% load static %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script src="{% static 'js/location-picker.js' %}"></script>
 {% endblock %}

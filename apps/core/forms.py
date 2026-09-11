@@ -28,8 +28,8 @@ class GeocodeFormMixin(forms.Form):
                 if result is None:
                     self.add_error(
                         name_field,
-                        "Stedet blev ikke fundet. Prøv en fuld adresse, "
-                        "fx Storegade 12, Aabenraa, eller angiv koordinater manuelt.",
+                        "Stedet blev ikke fundet. Vælg et af adresseforslagene, "
+                        "eller placér nålen på kortet.",
                     )
                 else:
                     cleaned[lat_field] = result.point.lat

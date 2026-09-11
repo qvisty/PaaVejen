@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}PåVejen{% endblock %}</title>
   <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_head %}{% endblock %}
 </head>
 <body>
   <header class="topbar">
@@ -39,5 +40,6 @@
   <footer class="footer">
     <p>PåVejen. Nogen skal alligevel den vej. <a href="{% url 'terms' %}">Vilkår</a></p>
   </footer>
+  {% block scripts %}{% endblock %}
 </body>
 </html>

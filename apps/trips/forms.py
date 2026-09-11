@@ -22,14 +22,18 @@ class TripForm(GeocodeFormMixin, forms.ModelForm):
             "departure_time": forms.DateTimeInput(
                 attrs={"type": "datetime-local"}, format="%Y-%m-%dT%H:%M",
             ),
+            "origin_lat": forms.HiddenInput(),
+            "origin_lng": forms.HiddenInput(),
+            "destination_lat": forms.HiddenInput(),
+            "destination_lng": forms.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in ("origin_lat", "origin_lng", "destination_lat", "destination_lng"):
             self.fields[field].required = False
-        self.fields["origin_name"].help_text = "Fx Kolding"
-        self.fields["destination_name"].help_text = "Fx Sønderborg"
+        self.fields["origin_name"].help_text = "Skriv adressen eller vælg på kortet"
+        self.fields["destination_name"].help_text = "Skriv adressen eller vælg på kortet"
 
 
 class RecurringTripForm(GeocodeFormMixin, forms.ModelForm):
@@ -55,11 +59,15 @@ class RecurringTripForm(GeocodeFormMixin, forms.ModelForm):
         ]
         widgets = {
             "departure_time": forms.TimeInput(attrs={"type": "time"}, format="%H:%M"),
+            "origin_lat": forms.HiddenInput(),
+            "origin_lng": forms.HiddenInput(),
+            "destination_lat": forms.HiddenInput(),
+            "destination_lng": forms.HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in ("origin_lat", "origin_lng", "destination_lat", "destination_lng"):
             self.fields[field].required = False
-        self.fields["origin_name"].help_text = "Fx Aabenraa"
-        self.fields["destination_name"].help_text = "Fx Tønder"
+        self.fields["origin_name"].help_text = "Skriv adressen eller vælg på kortet"
+        self.fields["destination_name"].help_text = "Skriv adressen eller vælg på kortet"
