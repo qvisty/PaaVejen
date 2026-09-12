@@ -68,7 +68,7 @@
       <strong>{{ recurring.origin_name }} → {{ recurring.destination_name }}</strong>
       <div class="meta">
         {{ recurring.weekday_labels }} kl. {{ recurring.departure_time|time:"H:i" }},
-        {{ recurring.get_capacity_display }}
+        <svg class="icon"><use href="#icon-size-{{ recurring.capacity }}"/></svg> {{ recurring.get_capacity_display }}
       </div>
     </div>
     <a class="button subtle" href="{{ recurring.get_absolute_url }}">Åbn</a>
@@ -85,7 +85,7 @@
       <strong>{{ trip.origin_name }} → {{ trip.destination_name }}</strong>
       <div class="meta">
         {{ trip.departure_time|date:"l j. F H:i" }},
-        {{ trip.get_capacity_display }},
+        <svg class="icon"><use href="#icon-size-{{ trip.capacity }}"/></svg> {{ trip.get_capacity_display }},
         <span class="status-badge status-{{ trip.status }}">{{ trip.get_status_display }}</span>
       </div>
     </div>
@@ -103,7 +103,7 @@
     <div>
       <strong>{{ transport_request.pickup_name }} → {{ transport_request.delivery_name }}</strong>
       <div class="meta">
-        {{ transport_request.get_size_display }},
+        <svg class="icon"><use href="#icon-size-{{ transport_request.size }}"/></svg> {{ transport_request.get_size_display }},
         senest {{ transport_request.latest_delivery|date:"j. F H:i" }},
         <span class="status-badge status-{{ transport_request.status }}">{{ transport_request.get_status_display }}</span>
       </div>

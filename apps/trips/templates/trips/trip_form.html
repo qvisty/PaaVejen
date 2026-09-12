@@ -8,11 +8,24 @@
 
 {% block content %}
 <div class="card">
-  <h2>{% if is_new %}Jeg kører{% else %}Rediger tur{% endif %}</h2>
+  <h2><svg class="icon icon-title"><use href="#icon-car"/></svg> {% if is_new %}Jeg kører{% else %}Rediger tur{% endif %}</h2>
   <p class="meta">Fortæl hvor du alligevel skal hen, så finder vi ting, der skal samme vej.</p>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.non_field_errors }}
+    {% for field in form.visible_fields %}
+      {% if field.name == "capacity" %}
+        {% include "core/size_picker.html" %}
+      {% else %}
+      <p>
+        {{ field.errors }}
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+      </p>
+      {% endif %}
+    {% endfor %}
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
     <button type="submit">{% if is_new %}Opret tur{% else %}Gem ændringer{% endif %}</button>
   </form>
   {% if is_new %}

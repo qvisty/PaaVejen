@@ -7,7 +7,7 @@
   <h2>{{ trip.origin_name }} → {{ trip.destination_name }}</h2>
   <table class="simple">
     <tr><td>Afgang</td><td>{{ trip.departure_time|date:"l j. F Y H:i" }}</td></tr>
-    <tr><td>Ledig kapacitet</td><td>{{ trip.get_capacity_display }}</td></tr>
+    <tr><td>Ledig kapacitet</td><td><svg class="icon"><use href="#icon-size-{{ trip.capacity }}"/></svg> {{ trip.get_capacity_display }}</td></tr>
     <tr><td>Maksimal omvej</td><td>{{ trip.max_detour_minutes }} minutter</td></tr>
     <tr><td>Status</td><td><span class="status-badge status-{{ trip.status }}">{{ trip.get_status_display }}</span></td></tr>
   </table>
@@ -27,7 +27,7 @@
     <div>
       <strong>{{ match.transport_request.pickup_name }} → {{ match.transport_request.delivery_name }}</strong>
       <div class="meta">
-        {{ match.transport_request.get_size_display }},
+        <svg class="icon"><use href="#icon-size-{{ match.transport_request.size }}"/></svg> {{ match.transport_request.get_size_display }},
         +{{ match.detour_minutes|floatformat:0 }} min. omvej,
         {{ match.suggested_price }} kr.
         <span class="status-badge status-{{ match.status }}">{{ match.get_status_display }}</span>

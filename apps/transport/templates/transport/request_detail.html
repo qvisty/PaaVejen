@@ -11,7 +11,7 @@
   {% endif %}
   <table class="simple">
     <tr><td>Opgavetype</td><td>{{ transport_request.get_category_display }}</td></tr>
-    <tr><td>Størrelse</td><td>{{ transport_request.get_size_display }}</td></tr>
+    <tr><td>Størrelse</td><td><svg class="icon"><use href="#icon-size-{{ transport_request.size }}"/></svg> {{ transport_request.get_size_display }}</td></tr>
     {% if transport_request.weight_kg %}
     <tr><td>Vægt</td><td>cirka {{ transport_request.weight_kg }} kg</td></tr>
     {% endif %}
