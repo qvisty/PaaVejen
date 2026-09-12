@@ -8,14 +8,34 @@
 
 {% block content %}
 <div class="card">
-  <h2>{% if is_new %}Gentagen tur{% else %}Rediger gentagen tur{% endif %}</h2>
+  <h2><svg class="icon icon-title"><use href="#icon-repeat"/></svg> {% if is_new %}Gentagen tur{% else %}Rediger gentagen tur{% endif %}</h2>
   <p class="meta">
     Kører du fast samme rute, fx til arbejde? Opret den én gang, så
     matcher vi automatisk nye opgaver mod dine kommende ture.
   </p>
   <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
+    {{ form.non_field_errors }}
+    {% for field in form.visible_fields %}
+      {% if field.name == "capacity" %}
+        {% include "core/size_picker.html" %}
+      {% elif field.name == "weekdays" %}
+      <fieldset class="size-picker">
+        <legend>{{ field.label }}</legend>
+        {{ field.errors }}
+        <div class="pill-group">{{ field }}</div>
+        {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+      </fieldset>
+      {% else %}
+      <p>
+        {{ field.errors }}
+        {{ field.label_tag }}
+        {{ field }}
+        {% if field.help_text %}<span class="helptext">{{ field.help_text }}</span>{% endif %}
+      </p>
+      {% endif %}
+    {% endfor %}
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
     <button type="submit">{% if is_new %}Opret gentagen tur{% else %}Gem ændringer{% endif %}</button>
   </form>
 </div>

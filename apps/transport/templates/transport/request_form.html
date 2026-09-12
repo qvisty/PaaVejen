@@ -33,7 +33,9 @@
     </fieldset>
 
     {% for field in form.visible_fields %}
-      {% if field.name != "category" %}
+      {% if field.name == "size" %}
+        {% include "core/size_picker.html" %}
+      {% elif field.name != "category" %}
       <p>
         {{ field.errors }}
         {{ field.label_tag }}

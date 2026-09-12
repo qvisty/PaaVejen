@@ -1,0 +1,14 @@
+<fieldset class="size-picker">
+  <legend>{{ field.label }}</legend>
+  {{ field.errors }}
+  <div class="size-options">
+    {% for value, label in field.field.choices %}
+    <label class="size-option">
+      <input type="radio" name="{{ field.html_name }}" value="{{ value }}"
+             {% if field.value == value %}checked{% endif %} required>
+      <svg class="size-icon"><use href="#icon-size-{{ value }}"/></svg>
+      <span>{{ label }}</span>
+    </label>
+    {% endfor %}
+  </div>
+</fieldset>

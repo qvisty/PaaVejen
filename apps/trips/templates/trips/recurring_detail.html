@@ -8,7 +8,7 @@
   <table class="simple">
     <tr><td>Dage</td><td>{{ recurring.weekday_labels }}</td></tr>
     <tr><td>Afgang cirka</td><td>{{ recurring.departure_time|time:"H:i" }}</td></tr>
-    <tr><td>Ledig kapacitet</td><td>{{ recurring.get_capacity_display }}</td></tr>
+    <tr><td>Ledig kapacitet</td><td><svg class="icon"><use href="#icon-size-{{ recurring.capacity }}"/></svg> {{ recurring.get_capacity_display }}</td></tr>
     <tr><td>Maksimal omvej</td><td>{{ recurring.max_detour_minutes }} minutter</td></tr>
     <tr><td>Status</td><td><span class="status-badge">{% if recurring.active %}Aktiv{% else %}Deaktiveret{% endif %}</span></td></tr>
   </table>

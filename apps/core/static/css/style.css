@@ -401,6 +401,99 @@ input:focus, select:focus, textarea:focus {
 .category-text strong { display: block; margin-bottom: 0.15rem; }
 .category-text .meta { font-size: 0.85rem; line-height: 1.35; display: block; }
 
+/* Størrelsesvælger */
+.size-picker {
+  border: none;
+  margin: 0 0 1rem;
+  padding: 0;
+}
+.size-picker legend {
+  font-weight: 600;
+  margin-bottom: 0.4rem;
+  padding: 0;
+}
+.size-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(88px, 1fr));
+  gap: 0.5rem;
+}
+.size-option {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 0.65rem 0.3rem 0.55rem;
+  background: var(--card);
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 0.78rem;
+  text-align: center;
+  color: var(--muted);
+  margin: 0;
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease,
+    box-shadow 0.15s ease, transform 0.15s ease;
+}
+.size-option:hover { border-color: var(--primary); transform: translateY(-1px); }
+.size-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.size-option:has(input:checked) {
+  border-color: var(--primary);
+  background: #eef5f2;
+  color: var(--text);
+  box-shadow: 0 0 0 1px var(--primary);
+}
+.size-option:has(input:focus-visible) {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+.size-icon {
+  width: 34px;
+  height: 34px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.size-option:has(input:checked) .size-icon { color: var(--primary); }
+
+/* Ugedagspills */
+.pill-group > div { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.pill-group div > div { display: contents; }
+.pill-group label {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.35rem 0.85rem;
+  cursor: pointer;
+  font-weight: 400;
+  font-size: 0.9rem;
+  color: var(--muted);
+  background: var(--card);
+  transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+.pill-group label:hover { border-color: var(--primary); }
+.pill-group input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+.pill-group label:has(input:checked) {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: #fff;
+}
+.pill-group label:has(input:focus-visible) {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
 /* Illustrationer på opgavetypekortene */
 .category-illustration {
   width: 100%;
