@@ -1,11 +1,23 @@
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
-from django.shortcuts import render
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
 
 from apps.bookings.models import Booking
 from apps.matching.models import Match
 from apps.transport.models import TransportRequest
 from apps.trips.models import RecurringTrip, Trip
+
+
+@login_required
+def stored_file(request, name):
+    """Server en fil gemt i databasen, fx et opgavebillede."""
+    from .models import StoredFile
+
+    row = get_object_or_404(StoredFile, name=name)
+    response = HttpResponse(bytes(row.content), content_type=row.content_type)
+    response["Cache-Control"] = "private, max-age=86400"
+    return response
 
 
 def offline(request):

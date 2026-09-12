@@ -7,4 +7,5 @@ urlpatterns = [
     path("oversigt/", views.dashboard, name="dashboard"),
     path("vilkaar/", views.terms, name="terms"),
     path("offline/", views.offline, name="offline"),
+    path("filer/<path:name>", views.stored_file, name="stored_file"),
 ]
