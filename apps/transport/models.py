@@ -5,6 +5,7 @@ from django.urls import reverse
 
 from apps.core.constants import SIZE_CHOICES, SIZE_MOVING_BOX
 from apps.core.geo import Point
+from apps.core.storage import DatabaseStorage
 
 
 def validate_image_size(image):
@@ -68,7 +69,7 @@ class TransportRequest(models.Model):
     )
     image = models.ImageField(
         "Billede", upload_to="opgaver/", null=True, blank=True,
-        validators=[validate_image_size],
+        validators=[validate_image_size], storage=DatabaseStorage(),
     )
     terms_accepted = models.BooleanField(
         "Vilkår bekræftet", default=False,

@@ -1,8 +1,19 @@
+import io
+import pathlib
+
 from django import forms
+from django.core.files.base import ContentFile
+from django.core.files.uploadedfile import UploadedFile
+from PIL import Image, ImageOps
 
 from apps.core.forms import GeocodeFormMixin
 
 from .models import TransportRequest
+
+# Uploads nedskaleres og genkodes, så databasen holdes lille, og EXIF
+# metadata som GPS position fjernes fra brugernes fotos.
+MAX_IMAGE_DIMENSION = 1600
+JPEG_QUALITY = 82
 
 # Korte forklaringer af opgavetyperne, jf. PRD afsnit 7. Forskellen er,
 # hvem der står med varen ved afhentningen.
@@ -65,6 +76,25 @@ class TransportRequestForm(GeocodeFormMixin, forms.ModelForm):
             "værdien er under 5.000 kr."
         )
         self.fields["terms_accepted"].help_text = "Se vilkårene i sidefoden."
+
+    def clean_image(self):
+        image = self.cleaned_data.get("image")
+        if not isinstance(image, UploadedFile):
+            # Uændret eksisterende billede eller tomt felt.
+            return image
+        try:
+            picture = Image.open(image)
+            picture = ImageOps.exif_transpose(picture)
+            picture = picture.convert("RGB")
+            picture.thumbnail((MAX_IMAGE_DIMENSION, MAX_IMAGE_DIMENSION))
+            buffer = io.BytesIO()
+            picture.save(buffer, format="JPEG", quality=JPEG_QUALITY, optimize=True)
+        except Exception as error:
+            raise forms.ValidationError("Billedet kunne ikke læses.") from error
+        stem = pathlib.PurePath(image.name).stem or "billede"
+        compressed = ContentFile(buffer.getvalue(), name=f"{stem}.jpg")
+        compressed.content_type = "image/jpeg"
+        return compressed
 
     def category_options(self):
         """(værdi, titel, forklaring) for hver opgavetype til skabelonen."""
