@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Offline. PåVejen{% endblock %}
+
+{% block content %}
+<div class="card" style="text-align: center;">
+  <svg class="icon hero-icon"><use href="#icon-logo"/></svg>
+  <h2>Du er offline</h2>
+  <p class="meta">
+    PåVejen kan ikke nå serveren lige nu. Tjek din forbindelse og prøv igen.
+  </p>
+  <a class="button" href="/">Prøv igen</a>
+</div>
+{% endblock %}

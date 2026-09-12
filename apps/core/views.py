@@ -8,6 +8,11 @@ from apps.transport.models import TransportRequest
 from apps.trips.models import RecurringTrip, Trip
 
 
+def offline(request):
+    """Vises af service workeren, når der ikke er netforbindelse."""
+    return render(request, "core/offline.html")
+
+
 def terms(request):
     """Vilkår og forbudte genstande, jf. PRD afsnit 19."""
     from apps.core.constants import FORBIDDEN_ITEMS

@@ -287,6 +287,17 @@ input:focus, select:focus, textarea:focus {
 .button.subtle { background: var(--bg); color: var(--text); border: 1px solid var(--border); }
 .button.danger { background: var(--danger); }
 
+/* Installationsbanner */
+.install-banner { animation: slideDown 0.3s ease both; }
+.install-banner-row {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+}
+.install-banner-row > div:nth-child(2) { flex: 1; min-width: 180px; }
+.install-icon { border-radius: 10px; }
+
 /* Flashbeskeder */
 .flash {
   padding: 0.6rem 1rem;

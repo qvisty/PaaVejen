@@ -53,20 +53,21 @@ def service_worker(request):
 def manifest(request):
     """Webmanifest, så PåVejen kan installeres som PWA, jf. PRD fase 4."""
     data = {
+        "id": "/",
         "name": "PåVejen",
         "short_name": "PåVejen",
         "description": "Match ture med ting, der skal samme vej.",
+        "lang": "da",
         "start_url": "/",
+        "scope": "/",
         "display": "standalone",
         "background_color": "#f7f6f3",
         "theme_color": "#1f6f5c",
         "icons": [
-            {
-                "src": "/static/img/icon.svg",
-                "sizes": "any",
-                "type": "image/svg+xml",
-                "purpose": "any",
-            },
+            {"src": "/static/img/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+            {"src": "/static/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+            {"src": "/static/img/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"},
+            {"src": "/static/img/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"},
         ],
     }
     return JsonResponse(data, content_type="application/manifest+json")

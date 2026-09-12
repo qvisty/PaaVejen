@@ -33,6 +33,19 @@
   </header>
 
   <main class="container">
+    <div class="card install-banner" id="install-banner" hidden>
+      <div class="install-banner-row">
+        <img src="{% static 'img/icon-192.png' %}" alt="" width="44" height="44" class="install-icon">
+        <div>
+          <strong>Installér PåVejen som app</strong>
+          <div class="meta">Hurtig adgang fra hjemmeskærmen og push notifikationer.</div>
+        </div>
+        <div class="actions">
+          <button type="button" class="button" id="install-app">Installér</button>
+          <button type="button" class="button subtle" id="install-dismiss">Ikke nu</button>
+        </div>
+      </div>
+    </div>
     {% if messages %}
       <div class="flash-list">
         {% for message in messages %}
@@ -46,6 +59,7 @@
   <footer class="footer">
     <p>PåVejen. Nogen skal alligevel den vej. <a href="{% url 'terms' %}">Vilkår</a></p>
   </footer>
+  <script src="{% static 'js/install.js' %}"></script>
   {% block scripts %}{% endblock %}
 </body>
 </html>
