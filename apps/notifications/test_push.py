@@ -113,7 +113,19 @@ class PwaEndpointTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "application/javascript")
         self.assertIn(b"showNotification", response.content)
+        self.assertIn(b"/offline/", response.content)
 
         response = self.client.get("/manifest.webmanifest")
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.json()["name"], "PåVejen")
+        data = response.json()
+        self.assertEqual(data["name"], "PåVejen")
+        icon_sources = [icon["src"] for icon in data["icons"]]
+        self.assertIn("/static/img/icon-192.png", icon_sources)
+        self.assertIn("/static/img/icon-maskable-512.png", icon_sources)
+        purposes = {icon["purpose"] for icon in data["icons"]}
+        self.assertIn("maskable", purposes)
+
+    def test_offline_page_serves(self):
+        response = self.client.get("/offline/")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Du er offline")

@@ -6,4 +6,5 @@ urlpatterns = [
     path("", views.home, name="home"),
     path("oversigt/", views.dashboard, name="dashboard"),
     path("vilkaar/", views.terms, name="terms"),
+    path("offline/", views.offline, name="offline"),
 ]
